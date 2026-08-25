@@ -1,0 +1,8 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+
+parameters:
+    paths:
+        - app
+    level: 8
+    checkOctaneCompatibility: true

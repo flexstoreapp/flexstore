@@ -1,0 +1,41 @@
+/**
+ * Library-agnostic icon names. These are the values persisted in the database,
+ * so they must stay stable even if the underlying icon library is swapped out.
+ */
+export const ICON_NAMES = [
+    'shipping',
+    'package',
+    'globe',
+    'location',
+    'lightning',
+    'clock',
+    'refresh',
+    'returns',
+    'support',
+    'chat',
+    'phone',
+    'email',
+    'shield',
+    'lock',
+    'verified',
+    'check',
+    'card',
+    'wallet',
+    'money',
+    'tag',
+    'discount',
+    'star',
+    'award',
+    'sparkles',
+    'fire',
+    'thumbs-up',
+    'community',
+    'handshake',
+    'smile',
+    'heart',
+    'gift',
+    'eco',
+    'idea',
+] as const;
+
+export type IconName = (typeof ICON_NAMES)[number];

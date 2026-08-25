@@ -1,0 +1,3 @@
+resources/js/components/ui/*
+resources/views/mail/*
+resources/js/types/translations.ts

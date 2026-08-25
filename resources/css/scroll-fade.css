@@ -1,0 +1,68 @@
+/* Scroll edge fade shared by admin + storefront.
+
+   Gradient masks appear at the scroll edges of the inner scroller and
+   reveal/hide based on its scroll position. Applied via the <ScrollFade>
+   component (or <ScrollArea fade>), which drives the `data-at-start` /
+   `data-at-end` attributes through the useScrollFade hook.
+
+   Structure: a `.scroll-fade` wrapper (positioned; owns the ::before/::after
+   masks) containing a `.scroll-fade-scroller` element (the thing that
+   actually scrolls). Axis is set with `data-axis` on the wrapper; the blend
+   colour with `--scroll-fade-color` (required — set it to the surface behind
+   the scroller). */
+.scroll-fade {
+    position: relative;
+}
+
+.scroll-fade::before,
+.scroll-fade::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    height: 16px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.scroll-fade::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade[data-axis='x']::before,
+.scroll-fade[data-axis='x']::after {
+    inset-inline: auto;
+    inset-block: 0;
+    height: auto;
+    width: 16px;
+}
+
+.scroll-fade[data-axis='x']::before {
+    inset-inline-start: 0;
+    background: linear-gradient(to right, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade[data-axis='x']::after {
+    inset-inline-end: 0;
+    background: linear-gradient(to left, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade[data-axis='x']:dir(rtl)::before {
+    background: linear-gradient(to left, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade[data-axis='x']:dir(rtl)::after {
+    background: linear-gradient(to right, var(--scroll-fade-color), transparent);
+}
+
+.scroll-fade:not([data-at-start])::before,
+.scroll-fade:not([data-at-end])::after {
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+}

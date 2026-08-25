@@ -1,0 +1,231 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@import 'tw-animate-css';
+@import './scroll-fade.css';
+@import './admin-theme.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source not '../js/components/storefront';
+@source not '../js/layouts/storefront';
+@source not '../js/pages/storefront';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --radius: 0.625rem;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background font-sans text-foreground antialiased;
+    }
+
+    button,
+    [role='button'],
+    a,
+    label,
+    summary {
+        touch-action: manipulation;
+    }
+}
+
+@layer utilities {
+    .pb-safe {
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+@theme inline {
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+#nprogress .bar {
+    background: var(--primary) !important;
+}
+
+#nprogress .peg {
+    box-shadow:
+        0 0 10px var(--primary),
+        0 0 5px var(--primary) !important;
+}
+
+#nprogress .spinner-icon {
+    border-top-color: var(--primary) !important;
+    border-left-color: var(--primary) !important;
+}
+
+.code-editor {
+    --code-editor-font-size: 1rem;
+}
+
+@media (width >= 48rem) {
+    .code-editor {
+        --code-editor-font-size: 0.75rem;
+    }
+}
+
+.rich-text-editor .ProseMirror {
+    outline: none;
+    height: 100%;
+    overflow: auto;
+    padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+.rich-text-editor.is-fullscreen .ProseMirror {
+    height: calc(100vh - 60px);
+    width: 100vw;
+    max-width: 100vw;
+}
+
+.rich-text-editor .ProseMirror table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.rich-text-editor .ProseMirror table td,
+.rich-text-editor .ProseMirror table th {
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    position: relative;
+    vertical-align: top;
+}
+
+.rich-text-editor .ProseMirror table th {
+    background-color: var(--secondary);
+    font-weight: bold;
+    text-align: start;
+}
+
+.rich-text-editor .ProseMirror img {
+    max-width: 100%;
+    height: auto;
+}
+
+.dark .code-editor .token.comment,
+.dark .code-editor .token.prolog,
+.dark .code-editor .token.doctype,
+.dark .code-editor .token.cdata {
+    color: #8b949e;
+}
+
+.dark .code-editor .token.punctuation {
+    color: #c9d1d9;
+}
+
+.dark .code-editor .token.property,
+.dark .code-editor .token.tag,
+.dark .code-editor .token.boolean,
+.dark .code-editor .token.number,
+.dark .code-editor .token.constant,
+.dark .code-editor .token.symbol,
+.dark .code-editor .token.deleted {
+    color: #ff7b72;
+}
+
+.dark .code-editor .token.selector,
+.dark .code-editor .token.attr-name,
+.dark .code-editor .token.string,
+.dark .code-editor .token.char,
+.dark .code-editor .token.builtin,
+.dark .code-editor .token.inserted {
+    color: #7ee787;
+}
+
+.dark .code-editor .token.operator,
+.dark .code-editor .token.entity,
+.dark .code-editor .token.url {
+    color: #79c0ff;
+}
+
+.dark .code-editor .token.atrule,
+.dark .code-editor .token.attr-value,
+.dark .code-editor .token.keyword {
+    color: #d2a8ff;
+}
+
+.dark .code-editor .token.function,
+.dark .code-editor .token.class-name {
+    color: #79c0ff;
+}
+
+.dark .code-editor .token.regex,
+.dark .code-editor .token.important,
+.dark .code-editor .token.variable {
+    color: #ffa657;
+}

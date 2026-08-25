@@ -1,0 +1,63 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        php: [8.4]
+        shard: [1, 2, 3, 4]
+
+    runs-on: ${{ matrix.os }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.os }} - shard ${{ matrix.shard }}/4
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, gd, pdo_mysql, fileinfo, ftp, redis, memcached, gmp, intl, :php-psr
+          ini-values: memory_limit=1G
+
+      - name: Install Composer Dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: ${{ matrix.os == 'windows-latest' && '--prefer-dist --optimize-autoloader --ignore-platform-reqs' || '--prefer-dist --optimize-autoloader' }}
+
+      - name: Prepare Environment
+        shell: bash
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build Assets
+        run: npm run build
+
+      - name: Tests
+        shell: bash
+        run: vendor/bin/pest --ci --compact --shard=${{ matrix.shard }}/4 ${{ matrix.os != 'windows-latest' && '--parallel' || '' }}
