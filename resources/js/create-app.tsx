@@ -1,11 +1,21 @@
 import { router, type Page } from '@inertiajs/core';
 import { createInertiaApp, type ResolvedComponent } from '@inertiajs/react';
+import * as Sentry from '@sentry/react';
 import { StrictMode, type ComponentType, type ReactElement, type ReactNode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
 import { ErrorBoundary } from '@/components/error-boundary';
 import { setTranslationLocale } from '@/lib/utils';
 import type { BaseSharedData, Direction } from '@/types';
+
+if (typeof window !== 'undefined' && import.meta.env.VITE_SENTRY_DSN) {
+    Sentry.init({
+        dsn: import.meta.env.VITE_SENTRY_DSN,
+        environment: import.meta.env.MODE,
+        integrations: [Sentry.browserTracingIntegration()],
+        tracesSampleRate: 0.2,
+    });
+}
 
 type CreateAppOptions = {
     resolve: (name: string) => Promise<ResolvedComponent>;
