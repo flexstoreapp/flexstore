@@ -26,7 +26,7 @@ final class ProductFactory extends Factory
     public function definition(): array
     {
         /** @var string $title */
-        $title = fake()->words(3, true);
+        $title = fake()->unique()->words(3, true);
 
         return [
             'type' => ProductType::Physical,
