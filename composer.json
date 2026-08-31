@@ -22,6 +22,7 @@
         "laravel/wayfinder": "^0.1.11",
         "pragmarx/google2fa-laravel": "^3.0",
         "propaganistas/laravel-phone": "^6.0",
+        "sentry/sentry-laravel": "^4.27",
         "spatie/laravel-permission": "^8.3",
         "spatie/laravel-translatable": "^6.11"
     },

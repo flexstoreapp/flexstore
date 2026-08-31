@@ -40,6 +40,7 @@
         "@laravel/passkeys": "^0.2.0",
         "@laravel/vite-plugin-wayfinder": "^0.1.7",
         "@rolldown/plugin-babel": "^0.2.3",
+        "@sentry/react": "^10.72.0",
         "@simplewebauthn/browser": "^13.3.0",
         "@stripe/react-stripe-js": "^6.8.0",
         "@stripe/stripe-js": "^9.13.0",

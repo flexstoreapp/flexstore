@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/react';
+import * as Sentry from '@sentry/react';
 import { AlertTriangleIcon, RefreshCwIcon } from 'lucide-react';
 import { Component, type ReactNode } from 'react';
 
@@ -28,6 +29,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         console.error('Global Error Boundary caught an error:', error, errorInfo);
+        Sentry.captureException(error, { extra: { componentStack: errorInfo.componentStack } });
 
         if (import.meta.env.DEV) {
             console.error('Error stack:', error.stack);
