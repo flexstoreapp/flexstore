@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Concerns\HasMedia;
 use App\Enums\DimensionUnit;
+use App\Enums\ProductRelationType;
 use App\Enums\ProductType;
 use App\Enums\TaxCategory;
 use App\Enums\WeightUnit;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -70,6 +72,8 @@ use Spatie\Translatable\HasTranslations;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductVariant> $variants
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ProductVariantOption> $variantOptions
  * @property-read \Illuminate\Database\Eloquent\Collection<int, StockMovement> $stockMovements
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, self> $crossSells
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, self> $upSells
  */
 #[Translatable('title', 'description', 'seo_title', 'seo_description')]
 #[UseFactory(ProductFactory::class)]
@@ -151,6 +155,34 @@ final class Product extends Model
     public function requiresShipping(): bool
     {
         return $this->type->requiresShipping();
+    }
+
+    /**
+     * @return BelongsToMany<self, $this>
+     */
+    public function crossSells(): BelongsToMany
+    {
+        return $this->relatedProductsOfType(ProductRelationType::CrossSell);
+    }
+
+    /**
+     * @return BelongsToMany<self, $this>
+     */
+    public function upSells(): BelongsToMany
+    {
+        return $this->relatedProductsOfType(ProductRelationType::UpSell);
+    }
+
+    /**
+     * @return BelongsToMany<self, $this>
+     */
+    public function relatedProductsOfType(ProductRelationType $type): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'product_relations', 'product_id', 'related_product_id')
+            ->withPivot(['relation_type', 'sort_order'])
+            ->wherePivot('relation_type', $type->value)
+            ->orderBy('product_relations.sort_order')
+            ->withTimestamps();
     }
 
     /**

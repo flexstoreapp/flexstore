@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\DTOs\StoreProductInput;
+use App\Enums\ProductRelationType;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ final readonly class StoreProductAction
         private UpsertProductVariantsAction $manageVariantsAction,
         private UpsertProductDownloadsAction $manageDownloadsAction,
         private SyncMediaAction $syncMediaAction,
+        private SyncProductRelationsAction $syncRelationsAction,
     ) {
     }
 
@@ -70,6 +72,14 @@ final readonly class StoreProductAction
 
             if ($input->downloads !== null) {
                 $this->manageDownloadsAction->handle($product, $input->downloads);
+            }
+
+            if ($input->crossSells !== null) {
+                $this->syncRelationsAction->handle($product, ProductRelationType::CrossSell, $input->crossSells);
+            }
+
+            if ($input->upSells !== null) {
+                $this->syncRelationsAction->handle($product, ProductRelationType::UpSell, $input->upSells);
             }
 
             return $product;

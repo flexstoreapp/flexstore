@@ -20,6 +20,8 @@ final readonly class UpdateProductInput
      * @param  list<ProductOptionInput>|null  $options
      * @param  list<ProductVariantInput>|null  $variants
      * @param  list<ProductDownloadInput>|null  $downloads
+     * @param  list<int>|null  $crossSells
+     * @param  list<int>|null  $upSells
      * @param  array<string, true>  $provided
      */
     public function __construct(
@@ -54,6 +56,8 @@ final readonly class UpdateProductInput
         public ?array $variants,
         public array $provided,
         public ?array $downloads,
+        public ?array $crossSells,
+        public ?array $upSells,
     ) {
     }
 
@@ -62,7 +66,7 @@ final readonly class UpdateProductInput
      */
     public static function fromArray(array $data): self
     {
-        $keys = ['title', 'url_handle', 'type', 'description', 'category_id', 'brand_id', 'tax_category', 'is_tax_exempt', 'price', 'compare_at_price', 'cost_per_item', 'sku', 'barcode', 'track_stock', 'stock', 'low_stock_threshold', 'in_stock', 'is_active', 'weight', 'weight_unit', 'length', 'width', 'height', 'dimension_unit', 'media', 'seo_title', 'seo_description', 'options', 'variants', 'downloads'];
+        $keys = ['title', 'url_handle', 'type', 'description', 'category_id', 'brand_id', 'tax_category', 'is_tax_exempt', 'price', 'compare_at_price', 'cost_per_item', 'sku', 'barcode', 'track_stock', 'stock', 'low_stock_threshold', 'in_stock', 'is_active', 'weight', 'weight_unit', 'length', 'width', 'height', 'dimension_unit', 'media', 'seo_title', 'seo_description', 'options', 'variants', 'downloads', 'cross_sells', 'up_sells'];
         $provided = [];
         foreach ($keys as $key) {
             if (array_key_exists($key, $data)) {
@@ -126,6 +130,12 @@ final readonly class UpdateProductInput
                 : null,
             variants: isset($data['variants']) && is_array($data['variants'])
                 ? array_values(array_map(ProductVariantInput::fromArray(...), $data['variants']))
+                : null,
+            crossSells: isset($data['cross_sells']) && is_array($data['cross_sells'])
+                ? array_values(array_map(intval(...), $data['cross_sells']))
+                : null,
+            upSells: isset($data['up_sells']) && is_array($data['up_sells'])
+                ? array_values(array_map(intval(...), $data['up_sells']))
                 : null,
             provided: $provided,
             downloads: isset($data['downloads']) && is_array($data['downloads'])

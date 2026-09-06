@@ -3,10 +3,10 @@ import { SectionFrame } from '@/components/storefront/section-frame';
 import { __ } from '@/lib/i18n';
 import type { ProductData } from '@/types';
 
-function Heading() {
+function Heading({ id, children }: { id?: string; children: string }) {
     return (
-        <h2 id="rel-heading" className="mb-5 text-4xl font-bold text-ink">
-            {__('You may also like')}
+        <h2 id={id} className="mb-5 text-4xl font-bold text-ink">
+            {children}
         </h2>
     );
 }
@@ -14,7 +14,7 @@ function Heading() {
 export function RelatedProductsSkeleton({ ratio = 1 }: { ratio?: number }) {
     return (
         <section aria-hidden="true">
-            <Heading />
+            <Heading>{__('You may also like')}</Heading>
             <SectionFrame cols={GRID_COLS[5]}>
                 {[0, 1, 2, 3, 4].map((index) => (
                     <div key={index} className="flex h-full animate-pulse flex-col border-e border-b border-line p-5">
@@ -29,14 +29,20 @@ export function RelatedProductsSkeleton({ ratio = 1 }: { ratio?: number }) {
     );
 }
 
-export function RelatedProducts({ products }: { products?: ProductData[] }) {
+interface RelatedProductsProps {
+    products?: ProductData[];
+    heading?: string;
+    headingId?: string;
+}
+
+export function RelatedProducts({ products, heading, headingId = 'rel-heading' }: RelatedProductsProps) {
     if (!products || products.length === 0) {
         return null;
     }
 
     return (
-        <section aria-labelledby="rel-heading">
-            <Heading />
+        <section aria-labelledby={headingId}>
+            <Heading id={headingId}>{heading ?? __('You may also like')}</Heading>
             <ProductGrid products={products} columns={5} />
         </section>
     );

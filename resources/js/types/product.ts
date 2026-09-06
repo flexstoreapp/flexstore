@@ -107,7 +107,11 @@ export interface Product {
     rating?: number | null;
     review_count?: number | null;
     rating_distribution?: RatingDistribution;
+    cross_sells?: RelatedProductOption[];
+    up_sells?: RelatedProductOption[];
 }
+
+export type RelatedProductOption = Pick<Product, 'id' | 'type' | 'title' | 'price' | 'price_range' | 'featured_media'>;
 
 export interface RatingDistribution {
     1: number;

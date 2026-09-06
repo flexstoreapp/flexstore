@@ -74,6 +74,16 @@ test('the demo dataset is imported with media, shipping and payment gateways', f
     Storage::disk('public')->assertExists($media->thumbnail_path);
 });
 
+test('demo products ship with cross-sells and up-sells', function () {
+    resolve(InstallDemoDataAction::class)->handle();
+
+    $phone = Product::query()->where('url_handle', 'aether-pulse-lite')->sole();
+
+    expect($phone->crossSells)->not->toBeEmpty()
+        ->and($phone->upSells)->not->toBeEmpty()
+        ->and($phone->crossSells->pluck('id'))->not->toContain($phone->id);
+});
+
 test('the demo store uses the docs favicon', function () {
     resolve(InstallDemoDataAction::class)->handle();
 

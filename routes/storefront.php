@@ -31,6 +31,7 @@ Route::middleware(CheckStorefrontMaintenance::class)->group(function () {
 
     Route::get('cart', [Storefront\CartController::class, 'show'])->name('cart.show');
     Route::delete('cart', [Storefront\CartController::class, 'destroy'])->name('cart.destroy');
+    Route::get('cart/cross-sells', Storefront\CartCrossSellController::class)->name('cart.cross-sells');
     Route::post('cart/items', [Storefront\CartItemController::class, 'store'])->name('cart.items.store');
     Route::patch('cart/items/{cartItem}', [Storefront\CartItemController::class, 'update'])->name('cart.items.update');
     Route::delete('cart/items/{cartItem}', [Storefront\CartItemController::class, 'destroy'])->name('cart.items.destroy');

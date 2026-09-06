@@ -332,3 +332,18 @@ test('requires storefront.update permission for update', function () {
 
     $response->assertForbidden();
 });
+
+test('up-sell visibility can be toggled', function () {
+    actingAsSuperAdmin()
+        ->patch(route('admin.storefront.product-detail.update'), [
+            'storefront_product_detail_show_up_sells' => false,
+        ])
+        ->assertRedirect()
+        ->assertSessionHasNoErrors();
+
+    assertDatabaseHas('settings', ['key' => 'storefront_product_detail_show_up_sells', 'value' => '0']);
+
+    actingAsSuperAdmin()
+        ->get(route('admin.storefront.product-detail.edit'))
+        ->assertInertia(fn (AssertableInertia $page) => $page->where('settings.show_up_sells', false));
+});

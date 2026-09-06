@@ -31,6 +31,7 @@ final class DuplicateProductRequest extends FormRequest
             'duplicate_tax' => ['sometimes', 'boolean'],
             'duplicate_seo' => ['sometimes', 'boolean'],
             'duplicate_digital_files' => ['sometimes', 'boolean'],
+            'duplicate_recommendations' => ['sometimes', 'boolean'],
             'duplicate_category' => ['sometimes', 'boolean'],
             'duplicate_brand' => ['sometimes', 'boolean'],
         ];
@@ -55,6 +56,7 @@ final class DuplicateProductRequest extends FormRequest
             'duplicate_tax' => mb_strtolower(__('Duplicate tax')),
             'duplicate_seo' => mb_strtolower(__('Duplicate SEO')),
             'duplicate_digital_files' => mb_strtolower(__('Duplicate digital files')),
+            'duplicate_recommendations' => mb_strtolower(__('Duplicate recommendations')),
             'duplicate_category' => mb_strtolower(__('Duplicate category')),
             'duplicate_brand' => mb_strtolower(__('Duplicate brand')),
         ];

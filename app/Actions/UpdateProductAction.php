@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\DTOs\UpdateProductInput;
+use App\Enums\ProductRelationType;
 use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,7 @@ final readonly class UpdateProductAction
         private UpsertProductVariantsAction $manageVariantsAction,
         private UpsertProductDownloadsAction $manageDownloadsAction,
         private SyncMediaAction $syncMediaAction,
+        private SyncProductRelationsAction $syncRelationsAction,
     ) {
     }
 
@@ -74,6 +76,14 @@ final readonly class UpdateProductAction
                 }
             } elseif ($product->wasChanged('type')) {
                 $this->manageDownloadsAction->handle($product, []);
+            }
+
+            if ($input->has('cross_sells')) {
+                $this->syncRelationsAction->handle($product, ProductRelationType::CrossSell, $input->crossSells ?? []);
+            }
+
+            if ($input->has('up_sells')) {
+                $this->syncRelationsAction->handle($product, ProductRelationType::UpSell, $input->upSells ?? []);
             }
 
             return $product;

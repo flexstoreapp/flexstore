@@ -24,6 +24,7 @@ final readonly class DuplicateProductInput
         public bool $duplicateShipping,
         public bool $duplicateSeo,
         public bool $duplicateDigitalFiles,
+        public bool $duplicateRecommendations,
     ) {
     }
 
@@ -47,6 +48,7 @@ final readonly class DuplicateProductInput
             duplicateShipping: (bool) ($data['duplicate_shipping'] ?? false),
             duplicateSeo: (bool) ($data['duplicate_seo'] ?? false),
             duplicateDigitalFiles: (bool) ($data['duplicate_digital_files'] ?? false),
+            duplicateRecommendations: (bool) ($data['duplicate_recommendations'] ?? false),
         );
     }
 }

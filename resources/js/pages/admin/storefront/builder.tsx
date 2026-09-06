@@ -10,10 +10,12 @@ import {
     PaletteIcon,
     PanelBottomIcon,
     PanelTopIcon,
+    ShoppingCartIcon,
 } from 'lucide-react';
 
 import * as AnnouncementController from '@/actions/App/Http/Controllers/Admin/AnnouncementController';
 import * as DashboardController from '@/actions/App/Http/Controllers/Admin/DashboardController';
+import * as StorefrontCartController from '@/actions/App/Http/Controllers/Admin/StorefrontCartController';
 import * as StorefrontCustomCssController from '@/actions/App/Http/Controllers/Admin/StorefrontCustomCssController';
 import * as StorefrontCustomJsController from '@/actions/App/Http/Controllers/Admin/StorefrontCustomJsController';
 import * as StorefrontFooterController from '@/actions/App/Http/Controllers/Admin/StorefrontFooterController';
@@ -63,6 +65,12 @@ export default function StorefrontBuilder() {
                 description={__('Configure product page sections')}
                 icon={<PackageSearchIcon className="size-5" />}
                 href={StorefrontProductDetailController.edit()}
+            />
+            <SidebarOption
+                title={__('Cart')}
+                description={__('Configure cart page sections')}
+                icon={<ShoppingCartIcon className="size-5" />}
+                href={StorefrontCartController.edit()}
             />
             <SidebarOption
                 title={__('Blog list')}

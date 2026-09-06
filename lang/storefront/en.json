@@ -43,6 +43,7 @@
     "Done": "Done",
     "Image :number": "Image :number",
     "Next image": "Next image",
+    "Pairs well with": "Pairs well with",
     ":percent% off": ":percent% off",
     "Previous image": "Previous image",
     "Price incl. tax": "Price incl. tax",
@@ -56,6 +57,7 @@
     "Sold out": "Sold out",
     "View full details": "View full details",
     "You may also like": "You may also like",
+    "You might also consider": "You might also consider",
     "Zoom image": "Zoom image",
 
     "Anonymous": "Anonymous",
@@ -100,7 +102,6 @@
     "You haven’t saved any items to your wishlist yet.": "You haven’t saved any items to your wishlist yet.",
     "Your wishlist is empty": "Your wishlist is empty",
 
-    "Cart": "Cart",
     "Clear cart": "Clear cart",
     "Decrease quantity": "Decrease quantity",
     "Increase quantity": "Increase quantity",

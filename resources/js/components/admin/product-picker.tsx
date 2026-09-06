@@ -8,12 +8,11 @@ import { useFormatMoney } from '@/hooks/use-format-money';
 import { __, transChoice } from '@/lib/i18n';
 import { mediaAlt, mediaSmallThumb } from '@/lib/media';
 import { getTranslation } from '@/lib/utils';
-import type { Product, ProductVariant } from '@/types';
+import type { Product, ProductVariant, RelatedProductOption } from '@/types';
 
-type SelectableProduct = Pick<Product, 'id' | 'type' | 'title' | 'price' | 'price_range' | 'featured_media'>;
 type SelectableVariant = Pick<ProductVariant, 'id' | 'product_id' | 'title' | 'price' | 'media' | 'options'>;
 
-export type SelectableItem = SelectableProduct & { variant?: SelectableVariant };
+export type SelectableItem = RelatedProductOption & { variant?: SelectableVariant };
 
 interface ProductPickerProps<T extends boolean = false> {
     open?: boolean;

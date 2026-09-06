@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import * as ProductController from '@/actions/App/Http/Controllers/Admin/ProductController';
 import { FormSubmit } from '@/components/admin/form-submit';
+import type { SelectableItem } from '@/components/admin/product-picker';
 import { UnsavedChangesAlert } from '@/components/admin/unsaved-changes-alert';
 import type { AdaptiveSelectOption } from '@/components/ui/adaptive-select';
 import { useSeoAutofill } from '@/hooks/admin/use-seo-autofill';
@@ -17,6 +18,7 @@ import { ProductDigitalFiles } from './product-digital-files';
 import { ProductInventory } from './product-inventory';
 import { ProductMedia } from './product-media';
 import { ProductPricing } from './product-pricing';
+import { ProductRelated } from './product-related';
 import { ProductSeo } from './product-seo';
 import { ProductShipping } from './product-shipping';
 import { ProductShopping } from './product-shopping';
@@ -50,6 +52,8 @@ export function ProductForm({ product, taxCategories, productTypes, maxUploadSiz
         stripHtml: true,
     });
     const [type, setType] = useState<ProductType>(product?.type ?? 'physical');
+    const [crossSells, setCrossSells] = useState<SelectableItem[]>(product?.cross_sells ?? []);
+    const [upSells, setUpSells] = useState<SelectableItem[]>(product?.up_sells ?? []);
     const isDigital = type === 'digital';
     const [variants, setVariants] = useState<ProductVariant[]>(product?.variants ?? []);
 
@@ -81,6 +85,8 @@ export function ProductForm({ product, taxCategories, productTypes, maxUploadSiz
             resetUrlHandle();
             setVariants([]);
             setType('physical');
+            setCrossSells([]);
+            setUpSells([]);
         }
     };
 
@@ -126,6 +132,15 @@ export function ProductForm({ product, taxCategories, productTypes, maxUploadSiz
                                     errors={errors}
                                 />
                             )}
+
+                            <ProductRelated
+                                productId={product?.id}
+                                crossSells={crossSells}
+                                onCrossSellsChange={setCrossSells}
+                                upSells={upSells}
+                                onUpSellsChange={setUpSells}
+                                errors={errors}
+                            />
                         </div>
 
                         <div className="space-y-6">
