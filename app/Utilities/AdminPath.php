@@ -17,8 +17,8 @@ final readonly class AdminPath
     public const array RESERVED = [
         'account', 'address-field-rules', 'brands', 'cart', 'categories', 'checkout',
         'compare', 'currency', 'discount', 'downloads', 'feeds', 'flash-sales', 'install',
-        'locale', 'newsletter', 'pay', 'policies', 'products', 'search', 'storage',
-        'track-order', 'translations', 'up', 'webhooks', 'wishlist',
+        'locale', 'newsletter', 'orders', 'pay', 'policies', 'products', 'search', 'storage',
+        'translations', 'up', 'webhooks', 'wishlist',
     ];
 
     public static function prefix(): string

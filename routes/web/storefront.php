@@ -12,7 +12,7 @@ Route::middleware(CheckStorefrontMaintenance::class)->group(function () {
     Route::get('shop', [Storefront\ShopController::class, 'index'])->name('shop.index');
     Route::get('products/{product:url_handle}', [Storefront\ProductController::class, 'show'])->name('products.show');
     Route::get('products/{product:url_handle}/quick-view', [Storefront\ProductQuickViewController::class, 'show'])->name('products.quick-view');
-    Route::post('products/{product}/reviews', [Storefront\ProductReviewController::class, 'store'])->name('products.reviews.store')->middleware('auth');
+    Route::post('products/{product:url_handle}/reviews', [Storefront\ProductReviewController::class, 'store'])->name('products.reviews.store')->middleware('auth');
     Route::get('categories', [Storefront\CategoryController::class, 'index'])->name('categories.index');
     Route::get('categories/{category:url_handle}', [Storefront\CategoryProductController::class, 'show'])->name('categories.products.show');
     Route::get('brands', [Storefront\BrandController::class, 'index'])->name('brands.index');
@@ -44,7 +44,7 @@ Route::middleware(CheckStorefrontMaintenance::class)->group(function () {
     Route::patch('checkout/draft', [Storefront\CheckoutDraftController::class, 'update'])->middleware('throttle:60,1')->name('checkout.draft.update');
     Route::post('checkout/shipping-options', [Storefront\CheckoutShippingOptionController::class, 'index'])->name('checkout.shipping-options.index');
     Route::post('checkout/payment-options', [Storefront\CheckoutPaymentOptionController::class, 'index'])->name('checkout.payment-options.index');
-    Route::post('checkout/options/select', [Storefront\CheckoutOptionController::class, 'store'])->name('checkout.options.store');
+    Route::post('checkout/options', [Storefront\CheckoutOptionController::class, 'store'])->name('checkout.options.store');
     Route::post('checkout/coupons', [Storefront\CheckoutCouponController::class, 'store'])->name('checkout.coupons.store');
     Route::delete('checkout/coupons', [Storefront\CheckoutCouponController::class, 'destroy'])->name('checkout.coupons.destroy');
 
@@ -52,9 +52,9 @@ Route::middleware(CheckStorefrontMaintenance::class)->group(function () {
 
     Route::get('downloads/{download:token}', [Storefront\DownloadController::class, 'show'])->middleware('throttle:30,1')->name('downloads.show');
 
-    Route::get('track-order', [Storefront\TrackOrderController::class, 'create'])->name('orders.track');
-    Route::post('track-order', [Storefront\TrackOrderController::class, 'store'])->middleware('throttle:10,1')->name('orders.track.lookup');
-    Route::get('track-order/{order}', [Storefront\TrackOrderController::class, 'show'])->middleware('throttle:30,1')->name('orders.track.show');
+    Route::get('orders/track', [Storefront\TrackOrderController::class, 'create'])->name('orders.track');
+    Route::post('orders/track', [Storefront\TrackOrderController::class, 'store'])->middleware('throttle:10,1')->name('orders.track.lookup');
+    Route::get('orders/track/{order}', [Storefront\TrackOrderController::class, 'show'])->middleware('throttle:30,1')->name('orders.track.show');
 
     Route::prefix('account')->name('account.')->group(function () {
         Route::middleware('account.guest')->group(function () {

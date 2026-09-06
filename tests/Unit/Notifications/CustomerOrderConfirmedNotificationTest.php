@@ -61,7 +61,7 @@ test('mail contains a signed track link for a guest order', function () {
     $rendered = (new CustomerOrderConfirmedNotification($order))->toMail($order)->render();
 
     expect($rendered)
-        ->toContain('/track-order/' . $order->id)
+        ->toContain('/orders/track/' . $order->id)
         ->toContain('signature=')
         ->not->toContain(route('account.orders.show', $order));
 });
@@ -71,7 +71,7 @@ test('mail has no track link for a registered order', function () {
 
     $rendered = (new CustomerOrderConfirmedNotification($order))->toMail($order)->render();
 
-    expect($rendered)->not->toContain('/track-order/');
+    expect($rendered)->not->toContain('/orders/track/');
 });
 
 test('mail has invoice pdf attached', function () {

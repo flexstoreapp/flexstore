@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import type { ReviewData, SimplePaginated } from '@/types';
 
 interface ProductReviewsProps {
-    productId: number;
+    productHandle: string;
     rating: number | null;
     reviewCount: number;
     distribution: Record<number, number>;
@@ -33,7 +33,7 @@ function SummaryStars({ rating }: { rating: number }) {
 }
 
 export function ProductReviews({
-    productId,
+    productHandle,
     rating,
     reviewCount,
     distribution,
@@ -80,7 +80,7 @@ export function ProductReviews({
     const reviewModal = canReview ? (
         <ReviewModal
             open={modalOpen}
-            productId={productId}
+            productHandle={productHandle}
             onClose={() => setModalOpen(false)}
             onSubmitted={() => setSubmitted(true)}
         />
