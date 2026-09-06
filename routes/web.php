@@ -33,6 +33,6 @@ Route::post('webhooks/payment/{driver}', PaymentWebhookController::class)->name(
 Route::get('sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('robots.txt', RobotsController::class)->name('robots');
 
-require __DIR__ . '/installer.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/storefront.php';
+require __DIR__ . '/web/installer.php';
+require __DIR__ . '/web/admin.php';
+require __DIR__ . '/web/storefront.php';

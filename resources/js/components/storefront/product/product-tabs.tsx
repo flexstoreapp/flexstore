@@ -54,7 +54,7 @@ function ReviewsPanel({ product, reviews, canReview }: ReviewsPanelProps) {
     return (
         <Deferred data="reviews" fallback={<ReviewsSkeleton />}>
             <ProductReviews
-                productId={product.id}
+                productHandle={product.url_handle}
                 rating={product.rating}
                 reviewCount={product.review_count}
                 distribution={product.rating_distribution}

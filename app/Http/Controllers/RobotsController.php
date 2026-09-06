@@ -21,7 +21,7 @@ final readonly class RobotsController
                 'Disallow: /checkout',
                 'Disallow: /cart',
                 'Disallow: /account',
-                'Disallow: /track-order',
+                'Disallow: /orders/track',
                 '',
                 'Sitemap: ' . route('sitemap'),
             ];
