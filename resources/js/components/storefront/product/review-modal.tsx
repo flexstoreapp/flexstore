@@ -10,12 +10,12 @@ import { cn } from '@/lib/utils';
 
 interface ReviewModalProps {
     open: boolean;
-    productId: number;
+    productHandle: string;
     onClose: () => void;
     onSubmitted: () => void;
 }
 
-export function ReviewModal({ open, productId, onClose, onSubmitted }: ReviewModalProps) {
+export function ReviewModal({ open, productHandle, onClose, onSubmitted }: ReviewModalProps) {
     const panelRef = useOverlay(open, onClose);
     const [rating, setRating] = useState(0);
     const [hovered, setHovered] = useState(0);
@@ -35,7 +35,7 @@ export function ReviewModal({ open, productId, onClose, onSubmitted }: ReviewMod
         setErrors({});
 
         try {
-            await httpPost(ProductReviewController.store(productId), { rating, title, content });
+            await httpPost(ProductReviewController.store(productHandle), { rating, title, content });
             setSubmitted(true);
         } catch (error) {
             if (error instanceof HttpError && error.status === 422) {
