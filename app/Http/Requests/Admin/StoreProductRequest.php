@@ -92,6 +92,11 @@ final class StoreProductRequest extends FormRequest
             'variants.*.dimension_unit' => ['nullable', Rule::enum(DimensionUnit::class)],
             'variants.*.media_id' => ['nullable', 'integer', new MediaRule(MediaType::Image)],
             'variants.*.is_default' => ['required', 'boolean'],
+            'cross_sells' => ['sometimes', 'nullable', 'array'],
+            'cross_sells.*' => ['integer', Rule::exists(Product::class, 'id')],
+            'up_sells' => ['sometimes', 'nullable', 'array'],
+            'up_sells.*' => ['integer', Rule::exists(Product::class, 'id')],
+
             'downloads' => ['nullable', 'array', 'required_if:type,digital'],
             'downloads.*.id' => ['nullable', 'uuid'],
             'downloads.*.variant_id' => ['nullable', 'uuid'],
@@ -167,6 +172,11 @@ final class StoreProductRequest extends FormRequest
             'variants.*.dimension_unit' => mb_strtolower(__('Dimension unit')),
             'variants.*.media_id' => mb_strtolower(__('Image')),
             'type' => mb_strtolower(__('Product type')),
+            'cross_sells' => mb_strtolower(__('Cross-sells')),
+            'cross_sells.*' => mb_strtolower(__('Cross-sell')),
+            'up_sells' => mb_strtolower(__('Up-sells')),
+            'up_sells.*' => mb_strtolower(__('Up-sell')),
+
             'downloads' => mb_strtolower(__('Downloads')),
             'downloads.*.id' => mb_strtolower(__('Download')),
             'downloads.*.variant_id' => mb_strtolower(__('Variant')),

@@ -60,6 +60,10 @@ final class UpdateStorefrontProductDetailRequest extends FormRequest
                 'sometimes',
                 'boolean',
             ],
+            'storefront_product_detail_show_up_sells' => [
+                'sometimes',
+                'boolean',
+            ],
             'storefront_product_detail_reviews_per_page' => [
                 'sometimes',
                 'integer',
@@ -84,6 +88,7 @@ final class UpdateStorefrontProductDetailRequest extends FormRequest
             'storefront_product_detail_related_products_count' => mb_strtolower(__('Number of products')),
             'storefront_product_detail_show_reviews' => mb_strtolower(__('Show reviews')),
             'storefront_product_detail_reviews_per_page' => mb_strtolower(__('Reviews per page')),
+            'storefront_product_detail_show_up_sells' => mb_strtolower(__('Show up-sells')),
         ];
     }
 

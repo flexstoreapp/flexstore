@@ -11,6 +11,7 @@ import { Section } from '@/components/storefront/section';
 import { useProductPurchase } from '@/hooks/storefront/use-product-purchase';
 import { useTrackProductView } from '@/hooks/storefront/use-track-product-view';
 import { useVariantUrlSync } from '@/hooks/storefront/use-variant-url-sync';
+import { __ } from '@/lib/i18n';
 import { galleryMedia, mediaBoxRatio } from '@/lib/media';
 import { getTranslation } from '@/lib/utils';
 import type {
@@ -28,9 +29,17 @@ interface ProductShowProps {
     canReview: boolean;
     reviews?: SimplePaginated<ReviewData>;
     relatedProducts?: ProductData[];
+    upSellProducts?: ProductData[];
 }
 
-export default function ProductShow({ product, settings, canReview, reviews, relatedProducts }: ProductShowProps) {
+export default function ProductShow({
+    product,
+    settings,
+    canReview,
+    reviews,
+    relatedProducts,
+    upSellProducts,
+}: ProductShowProps) {
     const { activeCurrency } = usePage<StorefrontSharedData>().props;
     const purchase = useProductPurchase(product, () => {});
     const { resolvedVariant, pricing } = purchase;
@@ -82,6 +91,20 @@ export default function ProductShow({ product, settings, canReview, reviews, rel
                         onActiveChange={setActiveTab}
                     />
                 </div>
+
+                {settings.show_up_sells && (
+                    <Deferred data="upSellProducts" fallback={<></>}>
+                        {upSellProducts?.length ? (
+                            <div className="mt-6">
+                                <RelatedProducts
+                                    products={upSellProducts}
+                                    heading={__('You might also consider')}
+                                    headingId="up-sell-heading"
+                                />
+                            </div>
+                        ) : null}
+                    </Deferred>
+                )}
 
                 {settings.show_related_products && (
                     <div className="mt-6">

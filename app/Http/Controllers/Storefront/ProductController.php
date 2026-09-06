@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Storefront;
 
+use App\Enums\ProductRelationType;
 use App\Models\Product;
 use App\Models\User;
 use App\Queries\CanReviewProductQuery;
 use App\Queries\ProductDetailQuery;
 use App\Queries\ProductDetailSettingsQuery;
+use App\Queries\ProductRelationsQuery;
 use App\Queries\ProductReviewsQuery;
 use App\Queries\RelatedProductsQuery;
 use App\Utilities\StorefrontHead;
@@ -28,6 +30,7 @@ final readonly class ProductController
         CanReviewProductQuery $canReviewQuery,
         ProductReviewsQuery $reviewsQuery,
         RelatedProductsQuery $relatedProductsQuery,
+        ProductRelationsQuery $relationsQuery,
     ): Response {
         abort_unless($product->is_active, 404);
 
@@ -42,6 +45,9 @@ final readonly class ProductController
             'canReview' => $canReviewQuery->execute($product, $user),
             ...$settings['show_reviews'] ? [
                 'reviews' => Inertia::defer(fn (): array => $reviewsQuery->execute($product, $settings['reviews_per_page'])),
+            ] : [],
+            ...$settings['show_up_sells'] ? [
+                'upSellProducts' => Inertia::defer(fn (): array => $relationsQuery->execute($product, ProductRelationType::UpSell)),
             ] : [],
             ...$settings['show_related_products'] ? [
                 'relatedProducts' => Inertia::defer(fn (): array => $relatedProductsQuery->execute($product, $settings['related_products_count'])),

@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Actions\DuplicateProductAction;
+use App\Actions\SyncProductRelationsAction;
 use App\Enums\Permission;
+use App\Enums\ProductRelationType;
 use App\Enums\Role as RoleEnum;
 use App\Enums\TaxCategory;
 use App\Enums\WeightUnit;
@@ -306,4 +308,23 @@ test('accepts a duplicated product URL handle that is a valid slug', function ()
     assertDatabaseHas('products', [
         'url_handle' => 'sluggish-copy-2',
     ]);
+});
+
+test('duplicating copies the recommendations when the option is checked', function () {
+    $product = Product::factory()->create(['title' => 'Original']);
+    $crossSell = Product::factory()->create();
+
+    app(SyncProductRelationsAction::class)->handle($product, ProductRelationType::CrossSell, [$crossSell->id]);
+
+    actingAsSuperAdmin()
+        ->post(route('admin.products.duplicate', $product), [
+            'title' => 'Duplicated Product',
+            'duplicate_recommendations' => true,
+        ])
+        ->assertRedirect()
+        ->assertSessionHasNoErrors();
+
+    $duplicate = Product::query()->where('url_handle', 'duplicated-product')->sole();
+
+    expect($duplicate->crossSells->pluck('id')->all())->toBe([$crossSell->id]);
 });

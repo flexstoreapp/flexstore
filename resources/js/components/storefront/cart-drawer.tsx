@@ -6,6 +6,7 @@ import * as CartController from '@/actions/App/Http/Controllers/Storefront/CartC
 import * as CheckoutController from '@/actions/App/Http/Controllers/Storefront/CheckoutController';
 import * as ProductController from '@/actions/App/Http/Controllers/Storefront/ProductController';
 import { buttonVariants } from '@/components/storefront/button';
+import { CartDrawerCrossSells } from '@/components/storefront/cart/cart-drawer-cross-sells';
 import { CloseButton } from '@/components/storefront/close-button';
 import { ContainedMedia } from '@/components/storefront/contained-media';
 import { QuantityStepper } from '@/components/storefront/quantity-stepper';
@@ -136,6 +137,7 @@ export function CartDrawer({ open, onClose }: { open: boolean; onClose: () => vo
                                 <LineItem key={item.id} item={item} onNavigate={onClose} />
                             ))}
                         </div>
+                        <CartDrawerCrossSells open={open} onNavigate={onClose} />
                         <div className="shrink-0 border-t border-line px-5 py-5 sm:px-6">
                             <div className="flex items-center justify-between font-head text-lg font-bold text-ink">
                                 <span>{__('Subtotal')}</span>

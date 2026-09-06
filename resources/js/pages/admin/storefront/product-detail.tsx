@@ -90,6 +90,20 @@ export default function ProductDetail({ settings: initialSettings }: { settings:
 
             <div className="space-y-4">
                 <SwitchSetting
+                    label={__('Show up-sells')}
+                    description={__('Display hand-picked up-sells below the product details')}
+                    checked={settings.show_up_sells}
+                    onCheckedChange={(checked) => {
+                        setSettings((prev) => ({ ...prev, show_up_sells: checked }));
+                        patchSetting({ storefront_product_detail_show_up_sells: checked });
+                    }}
+                />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
+                <SwitchSetting
                     label={__('Show related products')}
                     description={__('Display related products below the product details')}
                     checked={settings.show_related_products}

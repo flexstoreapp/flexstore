@@ -19,6 +19,7 @@ export function DuplicateProductOptions({ product }: DuplicateProductOptionsProp
     const hasShipping = product.weight !== null || (product.variants?.some((v) => v.weight !== null) ?? false);
     const hasSeo = !!product.seo_title || !!product.seo_description;
     const hasDigitalFiles = (product.downloads?.length ?? 0) > 0;
+    const hasRecommendations = (product.cross_sells?.length ?? 0) > 0 || (product.up_sells?.length ?? 0) > 0;
 
     return (
         <div className="grid gap-2 sm:grid-cols-2">
@@ -108,6 +109,14 @@ export function DuplicateProductOptions({ product }: DuplicateProductOptionsProp
                 label={__('Digital files')}
                 defaultChecked={hasDigitalFiles}
                 disabled={!hasDigitalFiles}
+            />
+
+            <CheckboxCard
+                id="duplicate-recommendations"
+                name="duplicate_recommendations"
+                label={__('Recommendations')}
+                defaultChecked={hasRecommendations}
+                disabled={!hasRecommendations}
             />
         </div>
     );

@@ -91,11 +91,16 @@ export interface ProductSourceRenderSettings {
     products: ProductData[];
 }
 
+export interface CartSettings {
+    show_cross_sells: boolean;
+}
+
 export interface ProductDetailSettings {
     show_info_strip: boolean;
     info_strip: InfoStripItem[];
     show_related_products: boolean;
     related_products_count: number;
+    show_up_sells: boolean;
     show_reviews: boolean;
     reviews_per_page: number;
 }

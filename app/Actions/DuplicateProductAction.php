@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\DTOs\DuplicateProductInput;
+use App\Enums\ProductRelationType;
 use App\Models\Product;
 use App\Models\ProductDownload;
 use App\Models\ProductOption;
@@ -18,12 +19,13 @@ final readonly class DuplicateProductAction
 {
     public function __construct(
         private SyncMediaAction $syncMediaAction,
+        private SyncProductRelationsAction $syncRelationsAction,
     ) {
     }
 
     public function handle(Product $product, DuplicateProductInput $input): Product
     {
-        $product->loadMissing(['options.values', 'variants.options', 'downloads', 'mediaGallery']);
+        $product->loadMissing(['options.values', 'variants.options', 'downloads', 'mediaGallery', 'crossSells', 'upSells']);
 
         return DB::transaction(function () use ($product, $input): Product {
             $options = $this->parseDuplicationOptions($input);
@@ -39,6 +41,10 @@ final readonly class DuplicateProductAction
 
             if ($options['duplicate_digital_files']) {
                 $this->cloneDownloads($product, $newProduct, $variantMapping);
+            }
+
+            if ($options['duplicate_recommendations']) {
+                $this->cloneRelations($product, $newProduct);
             }
 
             return $newProduct;
@@ -62,6 +68,7 @@ final readonly class DuplicateProductAction
             'duplicate_shipping' => $input->duplicateShipping,
             'duplicate_seo' => $input->duplicateSeo,
             'duplicate_digital_files' => $input->duplicateDigitalFiles,
+            'duplicate_recommendations' => $input->duplicateRecommendations,
         ];
     }
 
@@ -290,6 +297,18 @@ final readonly class DuplicateProductAction
         }
 
         return $variantMapping;
+    }
+
+    private function cloneRelations(Product $originalProduct, Product $newProduct): void
+    {
+        foreach (ProductRelationType::cases() as $type) {
+            $relatedIds = array_values($originalProduct->relatedProductsOfType($type)
+                ->pluck('products.id')
+                ->map(fn (mixed $id): int => (int) $id)
+                ->all());
+
+            $this->syncRelationsAction->handle($newProduct, $type, $relatedIds);
+        }
     }
 
     /**

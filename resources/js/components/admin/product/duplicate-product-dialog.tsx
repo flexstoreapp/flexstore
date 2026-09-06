@@ -35,6 +35,7 @@ export function DuplicateProductDialog({ open, onOpenChange, product }: Duplicat
     const handleTransform = (data: Record<string, FormDataConvertible>): Record<string, FormDataConvertible> => {
         data.duplicate_category = data.duplicate_category === 'on';
         data.duplicate_digital_files = data.duplicate_digital_files === 'on';
+        data.duplicate_recommendations = data.duplicate_recommendations === 'on';
         data.duplicate_brand = data.duplicate_brand === 'on';
         data.duplicate_media = data.duplicate_media === 'on';
         data.duplicate_pricing = data.duplicate_pricing === 'on';

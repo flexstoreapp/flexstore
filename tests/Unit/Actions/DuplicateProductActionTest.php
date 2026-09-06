@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Actions\DuplicateProductAction;
 use App\Actions\SyncMediaAction;
+use App\Actions\SyncProductRelationsAction;
 use App\DTOs\DuplicateProductInput;
+use App\Enums\ProductRelationType;
 use App\Models\Media;
 use App\Models\Product;
 use App\Models\ProductDownload;
@@ -544,4 +546,38 @@ test('skips digital files when not selected', function () {
 
     expect($result->downloads()->count())->toBe(0)
         ->and($product->downloads()->count())->toBe(1);
+});
+
+test('duplicates the cross-sells and up-sells when selected', function () {
+    $product = Product::factory()->create(['title' => 'Original']);
+    $crossSell = Product::factory()->create();
+    $upSell = Product::factory()->create();
+
+    $sync = app(SyncProductRelationsAction::class);
+    $sync->handle($product, ProductRelationType::CrossSell, [$crossSell->id]);
+    $sync->handle($product, ProductRelationType::UpSell, [$upSell->id]);
+
+    $result = app(DuplicateProductAction::class)->handle($product, DuplicateProductInput::fromArray([
+        'title' => 'Duplicate',
+        'duplicate_recommendations' => true,
+    ]));
+
+    expect($result->crossSells->pluck('id')->all())->toBe([$crossSell->id])
+        ->and($result->upSells->pluck('id')->all())->toBe([$upSell->id])
+        ->and($product->crossSells->pluck('id')->all())->toBe([$crossSell->id]);
+});
+
+test('skips the cross-sells and up-sells when not selected', function () {
+    $product = Product::factory()->create(['title' => 'Original']);
+    $related = Product::factory()->create();
+
+    app(SyncProductRelationsAction::class)->handle($product, ProductRelationType::CrossSell, [$related->id]);
+
+    $result = app(DuplicateProductAction::class)->handle($product, DuplicateProductInput::fromArray([
+        'title' => 'Duplicate',
+        'duplicate_recommendations' => false,
+    ]));
+
+    expect($result->crossSells)->toBeEmpty()
+        ->and($result->upSells)->toBeEmpty();
 });

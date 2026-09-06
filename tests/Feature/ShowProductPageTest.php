@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Actions\SyncProductRelationsAction;
 use App\Enums\PaymentStatus;
+use App\Enums\ProductRelationType;
 use App\Enums\ReviewStatus;
 use App\Http\Controllers\Storefront\ProductController;
 use App\Models\Category;
@@ -12,13 +14,17 @@ use App\Models\Product;
 use App\Models\Review;
 use App\Models\Setting;
 use App\Models\User;
+use App\Queries\ProductRelationsQuery;
 use Inertia\Testing\AssertableInertia;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 use function Pest\Laravel\withHeaders;
 
-covers(ProductController::class);
+covers([
+    ProductController::class,
+    ProductRelationsQuery::class,
+]);
 
 uses()->group('storefront', 'product');
 
@@ -85,6 +91,30 @@ test('deferred related products resolve on a partial reload', function () {
         ->assertJsonCount(2, 'props.relatedProducts');
 });
 
+test('deferred up-sells resolve on a partial reload', function () {
+    $product = Product::factory()->available()->create();
+    $upSell = Product::factory()->available()->create();
+
+    app(SyncProductRelationsAction::class)->handle($product, ProductRelationType::UpSell, [$upSell->id]);
+
+    get(route('products.show', $product->url_handle))->assertOk();
+
+    partialReload($product, 'upSellProducts')
+        ->assertOk()
+        ->assertJsonCount(1, 'props.upSellProducts')
+        ->assertJsonPath('props.upSellProducts.0.id', $upSell->id);
+});
+
+test('cross-sells are never sent to the product page', function () {
+    $product = Product::factory()->available()->create();
+    $crossSell = Product::factory()->available()->create();
+
+    app(SyncProductRelationsAction::class)->handle($product, ProductRelationType::CrossSell, [$crossSell->id]);
+
+    get(route('products.show', $product->url_handle))
+        ->assertInertia(fn (AssertableInertia $page) => $page->missing('crossSellProducts'));
+});
+
 test('reviews are omitted when the reviews section is disabled', function () {
     Setting::setValue('storefront_product_detail_show_reviews', false);
     $product = Product::factory()->available()->create();
@@ -99,4 +129,13 @@ test('related products are omitted when the section is disabled', function () {
 
     get(route('products.show', $product->url_handle))
         ->assertInertia(fn (AssertableInertia $page) => $page->missing('relatedProducts'));
+});
+
+test('up-sells are omitted when the section is disabled', function () {
+    Setting::setValue('storefront_product_detail_show_up_sells', false);
+
+    $product = Product::factory()->available()->create();
+
+    get(route('products.show', $product->url_handle))
+        ->assertInertia(fn (AssertableInertia $page) => $page->missing('upSellProducts'));
 });

@@ -244,6 +244,7 @@ Route::prefix(AdminPath::prefix())->name('admin.')->group(function () {
             Route::get('storefront/announcements', [Admin\AnnouncementController::class, 'index'])->name('storefront.announcements.index');
             Route::get('storefront/product-list', [Admin\StorefrontProductListController::class, 'edit'])->name('storefront.product-list.edit');
             Route::get('storefront/product-detail', [Admin\StorefrontProductDetailController::class, 'edit'])->name('storefront.product-detail.edit');
+            Route::get('storefront/cart', [Admin\StorefrontCartController::class, 'edit'])->name('storefront.cart.edit');
             Route::get('storefront/theme', [Admin\StorefrontThemeController::class, 'edit'])->name('storefront.theme.edit');
             Route::get('storefront/custom-css', [Admin\StorefrontCustomCssController::class, 'edit'])->name('storefront.custom-css.edit');
             Route::get('storefront/custom-js', [Admin\StorefrontCustomJsController::class, 'edit'])->name('storefront.custom-js.edit');
@@ -271,6 +272,7 @@ Route::prefix(AdminPath::prefix())->name('admin.')->group(function () {
             Route::delete('storefront/announcements/{announcement}', [Admin\AnnouncementController::class, 'destroy'])->name('storefront.announcements.destroy');
             Route::patch('storefront/product-list', [Admin\StorefrontProductListController::class, 'update'])->name('storefront.product-list.update');
             Route::patch('storefront/product-detail', [Admin\StorefrontProductDetailController::class, 'update'])->name('storefront.product-detail.update');
+            Route::patch('storefront/cart', [Admin\StorefrontCartController::class, 'update'])->name('storefront.cart.update');
             Route::patch('storefront/theme', [Admin\StorefrontThemeController::class, 'update'])->name('storefront.theme.update');
             Route::patch('storefront/custom-css', [Admin\StorefrontCustomCssController::class, 'update'])->name('storefront.custom-css.update');
             Route::patch('storefront/custom-js', [Admin\StorefrontCustomJsController::class, 'update'])->name('storefront.custom-js.update');

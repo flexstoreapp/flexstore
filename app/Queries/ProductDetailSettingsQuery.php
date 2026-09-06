@@ -15,6 +15,7 @@ final readonly class ProductDetailSettingsQuery
      *     info_strip: list<array{icon_name: string, title: array<string, string>, subtitle: array<string, string>}>,
      *     show_related_products: bool,
      *     related_products_count: int,
+     *     show_up_sells: bool,
      *     show_reviews: bool,
      *     reviews_per_page: int,
      * }
@@ -28,6 +29,7 @@ final readonly class ProductDetailSettingsQuery
             'info_strip' => $settings->get('storefront_product_detail_info_strip', []),
             'show_related_products' => (bool) $settings->get('storefront_product_detail_show_related_products', true),
             'related_products_count' => (int) $settings->get('storefront_product_detail_related_products_count', 10),
+            'show_up_sells' => (bool) $settings->get('storefront_product_detail_show_up_sells', true),
             'show_reviews' => (bool) $settings->get('storefront_product_detail_show_reviews', true),
             'reviews_per_page' => (int) $settings->get('storefront_product_detail_reviews_per_page', 10),
         ];

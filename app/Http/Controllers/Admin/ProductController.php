@@ -13,6 +13,7 @@ use App\Http\Requests\Admin\IndexAdminProductRequest;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Category;
+use App\Models\Media;
 use App\Models\Product;
 use App\Models\ProductDownload;
 use App\Models\ProductOption;
@@ -20,6 +21,7 @@ use App\Models\ProductOptionValue;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantOption;
 use App\Queries\ProductListQuery;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -80,10 +82,16 @@ final readonly class ProductController
             'variants.options.option',
             'variants.options.value',
             'downloads.media',
+            'crossSells.mediaGallery' => fn (Relation $query): Relation => $query->select(Media::displayColumns())->limit(1),
+            'crossSells.variants:id,product_id,price',
+            'upSells.mediaGallery' => fn (Relation $query): Relation => $query->select(Media::displayColumns())->limit(1),
+            'upSells.variants:id,product_id,price',
         ]);
 
         $transformedProduct = [
             ...$product->toArray(),
+            'cross_sells' => $this->relatedProductOptions($product->crossSells),
+            'up_sells' => $this->relatedProductOptions($product->upSells),
             'downloads' => $product->downloads->map(fn (ProductDownload $download): array => [
                 'id' => $download->id,
                 'variant_id' => $download->product_variant_id,
@@ -127,5 +135,21 @@ final readonly class ProductController
         $action->handle($product, $request->toDto());
 
         return back();
+    }
+
+    /**
+     * @param  Collection<int, Product>  $products
+     * @return list<array<string, mixed>>
+     */
+    private function relatedProductOptions(Collection $products): array
+    {
+        return array_values($products->map(fn (Product $related): array => [
+            'id' => $related->id,
+            'type' => $related->type->value,
+            'title' => $related->getTranslations('title'),
+            'price' => $related->price,
+            'price_range' => $related->price_range,
+            'featured_media' => $related->featured_media,
+        ])->all());
     }
 }

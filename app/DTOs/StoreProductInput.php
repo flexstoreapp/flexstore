@@ -20,6 +20,8 @@ final readonly class StoreProductInput
      * @param  list<ProductOptionInput>|null  $options
      * @param  list<ProductVariantInput>|null  $variants
      * @param  list<ProductDownloadInput>|null  $downloads
+     * @param  list<int>|null  $crossSells
+     * @param  list<int>|null  $upSells
      */
     public function __construct(
         public array|string $title,
@@ -52,6 +54,8 @@ final readonly class StoreProductInput
         public ?array $options,
         public ?array $variants,
         public ?array $downloads,
+        public ?array $crossSells,
+        public ?array $upSells,
     ) {
     }
 
@@ -119,6 +123,12 @@ final readonly class StoreProductInput
                 : null,
             downloads: isset($data['downloads']) && is_array($data['downloads'])
                 ? array_values(array_map(ProductDownloadInput::fromArray(...), $data['downloads']))
+                : null,
+            crossSells: isset($data['cross_sells']) && is_array($data['cross_sells'])
+                ? array_values(array_map(intval(...), $data['cross_sells']))
+                : null,
+            upSells: isset($data['up_sells']) && is_array($data['up_sells'])
+                ? array_values(array_map(intval(...), $data['up_sells']))
                 : null,
         );
     }

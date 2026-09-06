@@ -260,6 +260,12 @@ export function handleTransform(data: Record<string, FormDataConvertible>): Reco
         data.media = [];
     }
 
+    for (const field of ['cross_sells', 'up_sells']) {
+        if (!Array.isArray(data[field])) {
+            data[field] = [];
+        }
+    }
+
     if (data.type === 'digital' && !Array.isArray(data.downloads)) {
         data.downloads = [];
     }

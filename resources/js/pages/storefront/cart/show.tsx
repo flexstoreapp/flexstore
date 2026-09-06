@@ -1,7 +1,8 @@
-import { usePage } from '@inertiajs/react';
+import { Deferred, usePage } from '@inertiajs/react';
 import { useEffect, useRef } from 'react';
 
 import * as HomepageController from '@/actions/App/Http/Controllers/Storefront/HomepageController';
+import { CartCrossSells } from '@/components/storefront/cart/cart-cross-sells';
 import { CartItems } from '@/components/storefront/cart/cart-items';
 import { CartSummary } from '@/components/storefront/cart/cart-summary';
 import { CartEmptyState } from '@/components/storefront/cart-empty-state';
@@ -9,14 +10,15 @@ import { PageHeader } from '@/components/storefront/page-header';
 import { Section } from '@/components/storefront/section';
 import { analytics } from '@/lib/analytics';
 import { __ } from '@/lib/i18n';
-import type { DisplayTaxTotals, StorefrontSharedData } from '@/types';
+import type { DisplayTaxTotals, ProductData, StorefrontSharedData } from '@/types';
 
 interface CartShowProps {
     pricesIncludeTax: boolean;
     displayTaxTotals: DisplayTaxTotals;
+    crossSellProducts?: ProductData[];
 }
 
-export default function CartShow({ pricesIncludeTax, displayTaxTotals }: CartShowProps) {
+export default function CartShow({ pricesIncludeTax, displayTaxTotals, crossSellProducts }: CartShowProps) {
     const { cart, activeCurrency } = usePage<StorefrontSharedData>().props;
     const items = cart.items ?? [];
     const hasItems = items.length > 0;
@@ -49,6 +51,10 @@ export default function CartShow({ pricesIncludeTax, displayTaxTotals }: CartSho
                             displayTaxTotals={displayTaxTotals}
                         />
                     </div>
+
+                    <Deferred data="crossSellProducts" fallback={<></>}>
+                        <CartCrossSells products={crossSellProducts} />
+                    </Deferred>
                 </Section>
             ) : (
                 <CartEmptyState />
