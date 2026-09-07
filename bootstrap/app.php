@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\SettingGroup;
+use App\Http\Middleware\Api\ForceJsonResponse;
+use App\Http\Middleware\Api\SetApiCurrency;
+use App\Http\Middleware\Api\SetApiLocale;
+use App\Http\Middleware\Api\UseSanctumGuard;
 use App\Http\Middleware\ConfigureStorefrontHead;
 use App\Http\Middleware\EnsureAccountIsAuthenticated;
 use App\Http\Middleware\EnsureGuestCheckoutIsEnabled;
@@ -22,11 +26,15 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Head\Facades\Head;
 use Laravel\Head\Inertia\ShareHead;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        apiPrefix: 'api',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
@@ -50,7 +58,18 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        $middleware->api(prepend: [
+            ForceJsonResponse::class,
+            EnsureInstalled::class,
+            EnsureSchemaIsCurrent::class,
+            UseSanctumGuard::class,
+            SetApiLocale::class,
+            SetApiCurrency::class,
+        ]);
+
         $middleware->alias([
+            'abilities' => CheckAbilities::class,
+            'ability' => CheckForAnyAbility::class,
             'account.guest' => RedirectIfAccountAuthenticated::class,
             'account.auth' => EnsureAccountIsAuthenticated::class,
             'checkout.guest' => EnsureGuestCheckoutIsEnabled::class,
@@ -58,6 +77,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
+            if ($request->is('api/*')) {
+                return $response;
+            }
+
             if (in_array($response->getStatusCode(), [404, 403, 410]) && resolve(InstallationState::class)->isInstalled()) {
                 $storefrontSettings = Setting::getByGroup(SettingGroup::Storefront);
                 $theme = $storefrontSettings->get('storefront_theme_color', 'blue');

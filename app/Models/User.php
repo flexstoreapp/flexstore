@@ -24,6 +24,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passkeys\Contracts\PasskeyUser;
 use Laravel\Passkeys\Passkey;
 use Laravel\Passkeys\PasskeyAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Override;
 use SensitiveParameter;
 use Spatie\Permission\Models\Permission;
@@ -54,6 +55,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read Collection<int, CustomerAddress> $addresses
  * @property-read Collection<int, Order> $orders
  * @property-read Collection<int, Passkey> $passkeys
+ * @property-read Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read Wishlist|null $wishlist
  * @property-read int $order_count
  * @property-read CarbonInterface|null $last_fulfilled_order_date
@@ -62,6 +64,8 @@ use Spatie\Permission\Traits\HasRoles;
 #[UseFactory(UserFactory::class)]
 final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
+    use HasApiTokens;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 

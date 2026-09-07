@@ -73,8 +73,6 @@ final readonly class ProductCard
             'compare_at_price_range' => $this->compareAtPriceRange,
             'featured_media' => $this->featuredMedia,
             'in_stock' => $this->inStock,
-            'rating' => null,
-            'review_count' => null,
             'has_variants' => $this->hasVariants,
             'created_at' => $this->createdAt,
         ];

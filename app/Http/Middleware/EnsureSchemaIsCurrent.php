@@ -69,6 +69,12 @@ final readonly class EnsureSchemaIsCurrent
     {
         $this->applyLocale($request);
 
+        if ($request->expectsJson()) {
+            return response()
+                ->json(['message' => __('The store is being upgraded. Please try again shortly.')], Response::HTTP_SERVICE_UNAVAILABLE)
+                ->header('Retry-After', '10');
+        }
+
         return response()
             ->view('upgrading', ['state' => $state], Response::HTTP_SERVICE_UNAVAILABLE)
             ->header('Retry-After', '10');

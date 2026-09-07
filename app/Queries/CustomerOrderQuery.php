@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 final readonly class CustomerOrderQuery
 {
-    public function execute(int $orderId, User $user): Order
+    public function execute(int $orderId, User $user, bool $withLineDetail = true): Order
     {
         $order = Order::query()
             ->where('customer_id', $user->id)

@@ -16,7 +16,7 @@ final class CurrencyFactory extends Factory
     public function definition(): array
     {
         return [
-            'code' => fake()->unique()->currencyCode(),
+            'code' => $this->unusedCode(),
             'symbol' => fake()->randomElement(['$', '€', '£', '¥']),
             'exchange_rate' => fake()->randomFloat(4, 0.1, 10),
             'symbol_position' => CurrencySymbolPosition::Before,
@@ -46,5 +46,14 @@ final class CurrencyFactory extends Factory
         return $this->state(fn (): array => [
             'code' => fake()->unique()->randomElement(['EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'SEK', 'NZD']),
         ]);
+    }
+
+    private function unusedCode(): string
+    {
+        do {
+            $code = fake()->unique()->currencyCode();
+        } while (Currency::query()->where('code', $code)->exists());
+
+        return $code;
     }
 }

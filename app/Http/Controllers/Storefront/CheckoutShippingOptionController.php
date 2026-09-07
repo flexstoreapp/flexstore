@@ -36,6 +36,7 @@ final readonly class CheckoutShippingOptionController
                 'product_variant_id' => $item->product_variant_id,
                 'quantity' => $item->quantity,
             ])->all(),
+            withMedia: false,
         );
 
         $orderItemsSummary = OrderItemsSummary::fromHydratedItems($hydratedItems);

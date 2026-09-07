@@ -119,8 +119,6 @@ test('transforms product data correctly', function () {
         'compare_at_price',
         'featured_media',
         'in_stock',
-        'rating',
-        'review_count',
         'has_variants',
         'created_at',
     ])

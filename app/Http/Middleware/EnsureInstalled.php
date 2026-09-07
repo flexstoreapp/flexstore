@@ -18,6 +18,13 @@ final readonly class EnsureInstalled
     public function handle(Request $request, Closure $next): Response
     {
         if (! app()->runningUnitTests() && ! $this->installationState->isInstalled()) {
+            if ($request->expectsJson()) {
+                return response()->json(
+                    ['message' => __('This store has not been installed yet.')],
+                    Response::HTTP_SERVICE_UNAVAILABLE,
+                );
+            }
+
             return to_route('installer.requirements.show');
         }
 

@@ -130,7 +130,7 @@ final class CheckoutSession extends Model
 
     public function belongsToVisitor(?string $visitorCartId, ?User $visitor): bool
     {
-        return $this->cart_id === $visitorCartId
+        return ($visitorCartId !== null && $this->cart_id === $visitorCartId)
             || ($visitor instanceof User && $this->customer_id === $visitor->id);
     }
 

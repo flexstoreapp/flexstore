@@ -15,7 +15,7 @@ final readonly class AdminPath
      * @var list<string>
      */
     public const array RESERVED = [
-        'account', 'address-field-rules', 'brands', 'cart', 'categories', 'checkout',
+        'account', 'address-field-rules', 'api', 'brands', 'cart', 'categories', 'checkout',
         'compare', 'currency', 'discount', 'downloads', 'feeds', 'flash-sales', 'install',
         'locale', 'newsletter', 'orders', 'pay', 'policies', 'products', 'search', 'storage',
         'translations', 'up', 'webhooks', 'wishlist',
