@@ -26,7 +26,13 @@ final readonly class ResolveCartAction
             return $cart;
         }
 
-        return $this->storeCartAction->handle($cartId, $customer);
+        return $this->storeCartAction->handle($this->isClaimedByAnother($cartId) ? null : $cartId, $customer);
+    }
+
+    private function isClaimedByAnother(?string $cartId): bool
+    {
+        return ! in_array($cartId, [null, '', '0'], true)
+            && Cart::query()->whereKey($cartId)->exists();
     }
 
     private function findCart(?User $customer, ?string $cartId): ?Cart
@@ -46,9 +52,15 @@ final readonly class ResolveCartAction
             return null;
         }
 
-        return Cart::query()
+        $cart = Cart::query()
             ->with('items')
             ->whereKey($cartId)
             ->first();
+
+        if (! $cart instanceof Cart) {
+            return null;
+        }
+
+        return $cart->customer_id === null || $cart->customer_id === $customer?->id ? $cart : null;
     }
 }

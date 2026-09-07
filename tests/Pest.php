@@ -154,3 +154,12 @@ function removeTestLocale(string $locale): void
         @unlink(lang_path("{$bundle}/{$locale}.json"));
     }
 }
+
+function actingAsApiCustomer(?User $user = null): User
+{
+    $user ??= User::factory()->create();
+
+    Laravel\Sanctum\Sanctum::actingAs($user, [App\Enums\TokenAbility::Customer->value]);
+
+    return $user;
+}

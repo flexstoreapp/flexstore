@@ -26,6 +26,13 @@ final readonly class CheckStorefrontMaintenance
             return $next($request);
         }
 
+        if ($request->expectsJson()) {
+            return response()->json(
+                ['message' => __('The store is temporarily unavailable for maintenance.')],
+                Response::HTTP_SERVICE_UNAVAILABLE,
+            );
+        }
+
         $storefrontSettings = Setting::getByGroup(SettingGroup::Storefront);
 
         StorefrontHead::page(__('Maintenance'));

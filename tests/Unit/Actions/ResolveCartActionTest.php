@@ -74,3 +74,19 @@ test('does not return cached cart when different cart id requested', function ()
     expect($result1->id)->toBe($cart1->id)
         ->and($result2->id)->toBe($cart2->id);
 });
+
+test('a cart already claimed by another customer is never handed over', function () {
+    $owner = User::factory()->create();
+    $cart = Cart::factory()->create(['customer_id' => $owner->id]);
+
+    $resolved = app(ResolveCartAction::class)->handle($cart->id, User::factory()->create());
+
+    expect($resolved->id)->not->toBe($cart->id)
+        ->and($cart->refresh()->customer_id)->toBe($owner->id);
+});
+
+test('a guest holding another customer cart id gets a fresh cart', function () {
+    $cart = Cart::factory()->create(['customer_id' => User::factory()->create()->id]);
+
+    expect(app(ResolveCartAction::class)->handle($cart->id)->id)->not->toBe($cart->id);
+});

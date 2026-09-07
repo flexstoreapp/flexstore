@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 final readonly class CustomerOrderQuery
 {
-    public function execute(int $orderId, User $user): Order
+    public function execute(int $orderId, User $user, bool $withLineDetail = true): Order
     {
         $order = Order::query()
             ->where('customer_id', $user->id)
@@ -38,8 +38,10 @@ final readonly class CustomerOrderQuery
                 'refunds' => fn (Relation $query): Relation => $query
                     ->select(['id', 'order_id', 'status', 'amount', 'reason', 'created_at'])
                     ->latest(),
-                'refunds.items:id,order_refund_id,type,order_item_id,quantity,amount',
-                'refunds.items.orderItem:id,order_id,product_title,variant_title',
+                ...$withLineDetail ? [
+                    'refunds.items:id,order_refund_id,type,order_item_id,quantity,amount',
+                    'refunds.items.orderItem:id,order_id,product_title,variant_title',
+                ] : [],
                 'shipments' => fn (Relation $query): Relation => $query
                     ->select(['id', 'order_id', 'tracking_number', 'tracking_url', 'shipped_at', 'delivered_at', 'created_at'])
                     ->latest(),

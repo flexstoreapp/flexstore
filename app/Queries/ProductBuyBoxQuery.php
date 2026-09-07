@@ -28,7 +28,10 @@ final readonly class ProductBuyBoxQuery
             'category:id,name,url_handle',
             'options' => fn (Relation $q): Relation => $q->orderBy('id'),
             'options.values' => fn (Relation $q): Relation => $q->orderBy('id'),
-            'variants' => fn (Relation $q): Relation => $q->orderBy('id'),
+            'variants' => fn (Relation $q): Relation => $q->select([
+                'id', 'product_id', 'title', 'sku', 'barcode', 'price', 'compare_at_price',
+                'in_stock', 'is_default', 'track_stock', 'media_id',
+            ])->orderBy('id'),
             'variants.options',
             'variants.media:' . Media::displaySelect(),
             'mediaGallery:' . Media::displaySelect(),

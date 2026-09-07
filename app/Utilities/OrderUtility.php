@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final readonly class OrderUtility
@@ -34,19 +35,19 @@ final readonly class OrderUtility
      *
      * @throws ModelNotFoundException
      */
-    public function hydrateItems(array $itemsData): array
+    public function hydrateItems(array $itemsData, bool $withMedia = true): array
     {
         /** @var list<int> $productIds */
         $productIds = array_column($itemsData, 'product_id');
         $variantIds = array_filter(array_column($itemsData, 'product_variant_id'));
 
         $products = Product::query()
-            ->withFeaturedMedia()
+            ->when($withMedia, fn (Builder $query): Builder => $query->withFeaturedMedia())
             ->findMany($productIds)->keyBy('id');
         $variants = $variantIds === []
             ? collect()
             : ProductVariant::query()
-                ->with(['media:' . Media::displaySelect()])
+                ->when($withMedia, fn (Builder $query): Builder => $query->with(['media:' . Media::displaySelect()]))
                 ->findMany($variantIds)->keyBy('id');
 
         foreach ($productIds as $productId) {

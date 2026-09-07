@@ -23,7 +23,7 @@ final readonly class CustomerDownloadListQuery
                 ->whereNull('canceled_at')
                 ->whereNotIn('payment_status', [PaymentStatus::Refunded->value, PaymentStatus::Canceled->value]))
             ->select([
-                'id', 'order_id', 'token', 'name', 'original_filename',
+                'id', 'order_id', 'order_item_id', 'token', 'name', 'original_filename',
                 'file_size', 'mime_type', 'download_count', 'created_at',
             ])
             ->with(['order:id,created_at,canceled_at,payment_status'])

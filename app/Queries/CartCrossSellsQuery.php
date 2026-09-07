@@ -32,7 +32,9 @@ final readonly class CartCrossSellsQuery
         $ids = Product::query()
             ->select('id')
             ->whereIn('id', $cartProductIds)
-            ->with(['crossSells' => fn (Relation $relation): Relation => $relation->where('products.is_active', true)])
+            ->with(['crossSells' => fn (Relation $relation): Relation => $relation
+                ->select('products.id')
+                ->where('products.is_active', true)])
             ->get()
             ->flatMap(fn (Product $product): array => $product->crossSells->pluck('id')->all())
             ->unique()

@@ -22,6 +22,9 @@
     ":code applied": ":code applied",
     "Remove discount code :code": "Remove discount code :code",
 
+    "The store is being upgraded. Please try again shortly.": "The store is being upgraded. Please try again shortly.",
+    "This store has not been installed yet.": "This store has not been installed yet.",
+
     "Copy error": "Copy error",
     "Please try refreshing the page.": "Please try refreshing the page.",
     "Something went wrong.": "Something went wrong.",

@@ -53,6 +53,7 @@ final readonly class StorefrontCategoryListQuery
                         'id' => $child->id,
                         'url_handle' => $child->url_handle,
                         'name' => $child->getTranslations('name'),
+                        'product_count' => $subtreeCount($child->id),
                     ])
                     ->values()
                     ->all(),

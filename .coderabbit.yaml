@@ -1,0 +1,21 @@
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+language: en-US
+
+reviews:
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+  path_instructions:
+    - path: "**/*.php"
+      instructions: >-
+        Do not ask for docblocks or comments that restate a function name or
+        signature. Only PHPDoc that adds information beyond the signature, such
+        as array shapes and generics, belongs in this codebase. Migrations have
+        no down() method by design, and queries expose only execute() while
+        actions expose only handle().
+
+tone_instructions: >-
+  Report defects only. Skip documentation coverage, comment density and naming
+  style.
