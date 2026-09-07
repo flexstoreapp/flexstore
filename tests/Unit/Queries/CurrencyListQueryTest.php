@@ -27,7 +27,7 @@ test('returns all currencies', function () {
 
 test('includes newly created currencies', function () {
     $before = app(CurrencyListQuery::class)->execute()->count();
-    Currency::factory()->create();
+    Currency::factory()->create(['code' => 'ZZZ']);
 
     $query = app(CurrencyListQuery::class);
     $result = $query->execute();

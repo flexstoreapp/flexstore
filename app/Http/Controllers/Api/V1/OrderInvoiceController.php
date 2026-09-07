@@ -16,6 +16,7 @@ final readonly class OrderInvoiceController
     {
         $order = Order::query()->where('customer_id', $user->id)->findOrFail($orderId);
 
-        return InvoicePdfGenerator::response($order, download: true);
+        return InvoicePdfGenerator::response($order, download: true)
+            ->withHeaders(['Cache-Control' => 'no-store, private']);
     }
 }

@@ -75,3 +75,10 @@ test('maintenance mode answers api clients with json, not the storefront page', 
 
     expect($response->content())->not->toContain('<!DOCTYPE html>');
 });
+
+test('an unknown api path answers with json even when the client asks for html', function (): void {
+    get('/api/v1/does-not-exist', ['Accept' => 'text/html'])
+        ->assertNotFound()
+        ->assertHeader('content-type', 'application/json')
+        ->assertJsonStructure(['message']);
+});

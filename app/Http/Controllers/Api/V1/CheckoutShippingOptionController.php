@@ -69,7 +69,9 @@ final readonly class CheckoutShippingOptionController
             'tax_estimate' => $taxResult->taxTotal,
         ];
 
-        if (DisplayTaxTotals::from(Setting::getValue('display_tax_totals')) === DisplayTaxTotals::Itemized) {
+        $displayTaxTotals = DisplayTaxTotals::tryFrom((string) Setting::getValue('display_tax_totals')) ?? DisplayTaxTotals::Single;
+
+        if ($displayTaxTotals === DisplayTaxTotals::Itemized) {
             $response['tax_details'] = $taxResult->aggregatedTaxDetails();
         }
 

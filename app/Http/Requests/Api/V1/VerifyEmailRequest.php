@@ -17,6 +17,8 @@ final class VerifyEmailRequest extends FormRequest
         return [
             'id' => ['required', 'integer'],
             'hash' => ['required', 'string'],
+            'expires' => ['required', 'integer'],
+            'signature' => ['required', 'string'],
         ];
     }
 
@@ -29,6 +31,8 @@ final class VerifyEmailRequest extends FormRequest
         return [
             'id' => mb_strtolower(__('Account')),
             'hash' => mb_strtolower(__('Verification hash')),
+            'expires' => mb_strtolower(__('Expiry')),
+            'signature' => mb_strtolower(__('Signature')),
         ];
     }
 }
