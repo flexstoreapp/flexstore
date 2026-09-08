@@ -43,5 +43,16 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::get('brands/{brand}', [Admin\BrandController::class, 'show'])->middleware(Authorize::using(Permission::BrandsView))->name('brands.show');
         Route::patch('brands/{brand}', [Admin\BrandController::class, 'update'])->middleware(Authorize::using(Permission::BrandsManage))->name('brands.update');
         Route::delete('brands/{brand}', [Admin\BrandController::class, 'destroy'])->middleware(Authorize::using(Permission::BrandsDelete))->name('brands.destroy');
+
+        // products
+        Route::get('products/search', Admin\ProductSearchController::class)->middleware(Authorize::using(Permission::ProductsReference))->name('products.search');
+        Route::delete('products/bulk', [Admin\BulkProductController::class, 'destroy'])->middleware(Authorize::using(Permission::ProductsDelete))->name('products.bulk.destroy');
+        Route::get('products', [Admin\ProductController::class, 'index'])->middleware(Authorize::using(Permission::ProductsView))->name('products.index');
+        Route::post('products', [Admin\ProductController::class, 'store'])->middleware(Authorize::using(Permission::ProductsManage))->name('products.store');
+        Route::get('products/{product}', [Admin\ProductController::class, 'show'])->middleware(Authorize::using(Permission::ProductsView))->name('products.show');
+        Route::patch('products/{product}', [Admin\ProductController::class, 'update'])->middleware(Authorize::using(Permission::ProductsManage))->name('products.update');
+        Route::delete('products/{product}', [Admin\ProductController::class, 'destroy'])->middleware(Authorize::using(Permission::ProductsDelete))->name('products.destroy');
+        Route::post('products/{product}/duplicate', [Admin\DuplicateProductController::class, 'store'])->middleware(Authorize::using(Permission::ProductsManage))->name('products.duplicate');
+        Route::post('product-downloads', [Admin\DigitalFileController::class, 'store'])->middleware(Authorize::using(Permission::ProductsManage))->name('product-downloads.store');
     });
 });
