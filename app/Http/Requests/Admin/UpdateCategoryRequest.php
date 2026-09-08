@@ -25,7 +25,6 @@ final class UpdateCategoryRequest extends FormRequest
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'url_handle' => [
                 'sometimes',
-                'nullable',
                 'string',
                 'max:255',
                 new SlugRule(),

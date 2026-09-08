@@ -49,8 +49,8 @@ test('a product is fetched by its url handle', function (): void {
 
     getJson(route('api.v1.products.show', $product->url_handle))
         ->assertOk()
-        ->assertJsonPath('data.id', $product->id)
-        ->assertJsonStructure(['data' => ['id', 'title', 'description', 'media', 'options', 'variants', 'rating_distribution']]);
+        ->assertJsonPath('id', $product->id)
+        ->assertJsonStructure(['id', 'title', 'description', 'media', 'options', 'variants', 'rating_distribution']);
 });
 
 test('an inactive product is not exposed', function (): void {
@@ -65,9 +65,9 @@ test('facets are returned with a localized name and a count', function (): void 
 
     getJson(route('api.v1.shop.facets'))
         ->assertOk()
-        ->assertJsonStructure(['data' => ['categories', 'brands', 'price_buckets', 'rating_buckets']])
-        ->assertJsonPath('data.categories.0.name', $category->name)
-        ->assertJsonPath('data.categories.0.count', 1);
+        ->assertJsonStructure(['categories', 'brands', 'price_buckets', 'rating_buckets'])
+        ->assertJsonPath('categories.0.name', $category->name)
+        ->assertJsonPath('categories.0.count', 1);
 });
 
 test('the category tree is returned with product counts', function (): void {
@@ -76,8 +76,8 @@ test('the category tree is returned with product counts', function (): void {
 
     getJson(route('api.v1.categories.index'))
         ->assertOk()
-        ->assertJsonPath('data.0.id', $category->id)
-        ->assertJsonPath('data.0.product_count', 1);
+        ->assertJsonPath('0.id', $category->id)
+        ->assertJsonPath('0.product_count', 1);
 });
 
 test('products can be listed for a category', function (): void {
@@ -119,11 +119,11 @@ test('the accept-language header selects the locale of translated fields', funct
 
     getJson(route('api.v1.products.show', $product->url_handle), ['Accept-Language' => 'ar'])
         ->assertOk()
-        ->assertJsonPath('data.title', 'سترة ميرينو');
+        ->assertJsonPath('title', 'سترة ميرينو');
 
     getJson(route('api.v1.products.show', $product->url_handle), ['Accept-Language' => 'en'])
         ->assertOk()
-        ->assertJsonPath('data.title', 'Merino crew knit');
+        ->assertJsonPath('title', 'Merino crew knit');
 });
 
 test('the category tree nests children under their parent', function (): void {
@@ -133,8 +133,8 @@ test('the category tree nests children under their parent', function (): void {
 
     getJson(route('api.v1.categories.index'))
         ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $parent->id)
-        ->assertJsonPath('data.0.children.0.id', $child->id)
-        ->assertJsonPath('data.0.product_count', 1);
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.id', $parent->id)
+        ->assertJsonPath('0.children.0.id', $child->id)
+        ->assertJsonPath('0.product_count', 1);
 });

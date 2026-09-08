@@ -20,7 +20,7 @@ test('a stored rate exposes its id as the rate id and carries no quote', functio
         'delivery_time' => ['en' => '3 to 5 days'],
     ]))->toArray(Request::create('/'));
 
-    expect($option['id'])->toBe(7)
+    expect($option['id'])->toBe('7')
         ->and($option['rate_id'])->toBe(7)
         ->and($option['quote_reference'])->toBeNull()
         ->and($option['service_code'])->toBeNull()

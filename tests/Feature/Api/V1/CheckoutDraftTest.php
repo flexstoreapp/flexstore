@@ -45,8 +45,8 @@ test('a draft creates the pending session that abandoned checkout recovery needs
         'shipping_address' => ['first_name' => 'John', 'country_code' => 'US', 'city' => 'New York'],
     ], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.cart_token', $cart->id)
-        ->assertJsonPath('data.coupon_removed', false);
+        ->assertJsonPath('cart_token', $cart->id)
+        ->assertJsonPath('coupon_removed', false);
 
     assertDatabaseHas('checkout_sessions', [
         'cart_id' => $cart->id,

@@ -17,9 +17,9 @@ test('a written policy is returned with its title', function (): void {
 
     getJson(route('api.v1.policies.show', 'refund'))
         ->assertOk()
-        ->assertJsonPath('data.policy', 'refund')
-        ->assertJsonPath('data.title', 'Refund policy')
-        ->assertJsonPath('data.content', 'Return anything unworn within 30 days.');
+        ->assertJsonPath('policy', 'refund')
+        ->assertJsonPath('title', 'Refund policy')
+        ->assertJsonPath('content', 'Return anything unworn within 30 days.');
 });
 
 test('a policy the merchant has not written is not found', function (): void {
@@ -39,5 +39,5 @@ test('the configuration lists only the policies that have been written', functio
 
     getJson(route('api.v1.config'))
         ->assertOk()
-        ->assertJsonPath('data.policies', ['refund', 'terms']);
+        ->assertJsonPath('policies', ['refund', 'terms']);
 });

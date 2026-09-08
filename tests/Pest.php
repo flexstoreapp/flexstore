@@ -163,3 +163,12 @@ function actingAsApiCustomer(?User $user = null): User
 
     return $user;
 }
+
+function actingAsApiAdmin(?User $user = null): User
+{
+    $user ??= User::factory()->create();
+
+    Laravel\Sanctum\Sanctum::actingAs($user, [App\Enums\TokenAbility::Admin->value]);
+
+    return $user;
+}

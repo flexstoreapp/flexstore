@@ -11,6 +11,7 @@ use App\DTOs\TaxCalculationInput;
 use App\Enums\DisplayTaxTotals;
 use App\Http\Requests\Storefront\CheckoutShippingOptionsRequest;
 use App\Http\Resources\Api\V1\ShippingOptionResource;
+use App\Http\Resources\Api\V1\TaxLineResource;
 use App\Models\CartItem;
 use App\Models\Currency;
 use App\Models\Setting;
@@ -72,9 +73,9 @@ final readonly class CheckoutShippingOptionController
         $displayTaxTotals = DisplayTaxTotals::tryFrom((string) Setting::getValue('display_tax_totals')) ?? DisplayTaxTotals::Single;
 
         if ($displayTaxTotals === DisplayTaxTotals::Itemized) {
-            $response['tax_details'] = $taxResult->aggregatedTaxDetails();
+            $response['tax_details'] = TaxLineResource::collection($taxResult->aggregatedTaxDetails());
         }
 
-        return response()->json(['data' => $response]);
+        return response()->json($response);
     }
 }

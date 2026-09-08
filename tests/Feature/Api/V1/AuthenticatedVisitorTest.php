@@ -31,7 +31,7 @@ test('a bearer token identifies the customer on public routes', function (): voi
     $token = postJson(route('api.v1.cart.items.store'), [
         'product_id' => $product->id,
         'quantity' => 1,
-    ], bearer($user))->assertOk()->json('data.token');
+    ], bearer($user))->assertOk()->json('token');
 
     expect(Cart::query()->findOrFail($token)->customer_id)->toBe($user->id);
 });
@@ -45,7 +45,7 @@ test('a signed-in customer keeps their cart across requests without a cart token
 
     getJson(route('api.v1.cart.show'), $headers)
         ->assertOk()
-        ->assertJsonPath('data.item_count', 2);
+        ->assertJsonPath('item_count', 2);
 });
 
 test('no token still resolves an anonymous visitor', function (): void {
@@ -54,7 +54,7 @@ test('no token still resolves an anonymous visitor', function (): void {
     $token = postJson(route('api.v1.cart.items.store'), [
         'product_id' => $product->id,
         'quantity' => 1,
-    ])->assertOk()->json('data.token');
+    ])->assertOk()->json('token');
 
     expect(Cart::query()->findOrFail($token)->customer_id)->toBeNull();
 });
@@ -64,5 +64,5 @@ test('a bearer token still authenticates the account routes', function (): void 
 
     getJson(route('api.v1.account.profile.show'), bearer($user))
         ->assertOk()
-        ->assertJsonPath('data.id', $user->id);
+        ->assertJsonPath('id', $user->id);
 });

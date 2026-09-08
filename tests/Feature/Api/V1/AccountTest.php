@@ -50,8 +50,8 @@ test('the profile is returned for the token owner', function (): void {
 
     getJson(route('api.v1.account.profile.show'))
         ->assertOk()
-        ->assertJsonPath('data.id', $user->id)
-        ->assertJsonPath('data.email', $user->email);
+        ->assertJsonPath('id', $user->id)
+        ->assertJsonPath('email', $user->email);
 });
 
 test('the profile name can be updated without touching the email', function (): void {
@@ -59,8 +59,8 @@ test('the profile name can be updated without touching the email', function (): 
 
     patchJson(route('api.v1.account.profile.update'), ['name' => 'New Name'])
         ->assertOk()
-        ->assertJsonPath('data.name', 'New Name')
-        ->assertJsonPath('data.email', $user->email);
+        ->assertJsonPath('name', 'New Name')
+        ->assertJsonPath('email', $user->email);
 
     assertDatabaseHas('users', ['id' => $user->id, 'name' => 'New Name', 'email' => $user->email]);
 });
@@ -97,8 +97,8 @@ test('an order is returned with items, addresses and totals', function (): void 
 
     getJson(route('api.v1.account.orders.show', $order->id))
         ->assertOk()
-        ->assertJsonPath('data.id', $order->id)
-        ->assertJsonStructure(['data' => ['items', 'subtotal', 'total', 'shipments', 'refunds', 'downloads']]);
+        ->assertJsonPath('id', $order->id)
+        ->assertJsonStructure(['items', 'subtotal', 'total', 'shipments', 'refunds', 'downloads']);
 });
 
 test('an address can be created, defaulted and deleted', function (): void {
@@ -112,11 +112,11 @@ test('an address can be created, defaulted and deleted', function (): void {
         'state' => 'NY',
         'postal_code' => '10001',
         'country_code' => 'US',
-    ])->assertCreated()->json('data.id');
+    ])->assertCreated()->json('id');
 
     postJson(route('api.v1.account.addresses.default', $addressId))
         ->assertOk()
-        ->assertJsonPath('data.is_default', true);
+        ->assertJsonPath('is_default', true);
 
     deleteJson(route('api.v1.account.addresses.destroy', $addressId))->assertOk();
 
@@ -139,12 +139,12 @@ test('products can be added to and removed from the wishlist', function (): void
 
     getJson(route('api.v1.account.wishlist.show'))
         ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $product->id);
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.id', $product->id);
 
     deleteJson(route('api.v1.account.wishlist.items.destroy', $product->id))->assertOk();
 
-    getJson(route('api.v1.account.wishlist.show'))->assertOk()->assertJsonCount(0, 'data');
+    getJson(route('api.v1.account.wishlist.show'))->assertOk()->assertJsonCount(0);
 });
 
 test('account endpoints reject unauthenticated requests', function (): void {
@@ -158,8 +158,8 @@ test('saved addresses are listed for the authenticated customer', function (): v
 
     getJson(route('api.v1.account.addresses.index'))
         ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $address->id);
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.id', $address->id);
 });
 
 test('deleting the account requires the current password and revokes every token', function (): void {
@@ -199,7 +199,7 @@ test('an order line for a product that is gone is not linkable', function (): vo
 
     getJson(route('api.v1.account.orders.show', $order->id))
         ->assertOk()
-        ->assertJsonPath('data.items.0.url_handle', null);
+        ->assertJsonPath('items.0.url_handle', null);
 
     getJson(route('api.v1.account.orders.index'))
         ->assertOk()

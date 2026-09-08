@@ -33,9 +33,9 @@ test('active brands are listed with the name as a plain string', function (): vo
 
     getJson(route('api.v1.brands.index'))
         ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $brand->id)
-        ->assertJsonPath('data.0.name', 'Northwind');
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.id', $brand->id)
+        ->assertJsonPath('0.name', 'Northwind');
 });
 
 test('search suggestions match on the product title', function (): void {
@@ -66,7 +66,7 @@ test('related products come from the same category', function (): void {
 
     getJson(route('api.v1.products.related', $product->url_handle))
         ->assertOk()
-        ->assertJsonPath('data.0.id', $sibling->id);
+        ->assertJsonPath('0.id', $sibling->id);
 });
 
 test('up-sells are the products the merchant picked', function (): void {
@@ -79,8 +79,8 @@ test('up-sells are the products the merchant picked', function (): void {
 
     getJson(route('api.v1.products.up-sells', $product->url_handle))
         ->assertOk()
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.id', $upSell->id);
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.id', $upSell->id);
 });
 
 test('cross-sells are returned for what is already in the cart', function (): void {
@@ -96,5 +96,5 @@ test('cross-sells are returned for what is already in the cart', function (): vo
 
     getJson(route('api.v1.cart.cross-sells'), ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.0.id', $crossSell->id);
+        ->assertJsonPath('0.id', $crossSell->id);
 });

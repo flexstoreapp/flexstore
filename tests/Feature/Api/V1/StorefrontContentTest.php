@@ -22,13 +22,11 @@ test('the config endpoint exposes what a client needs to boot', function (): voi
     getJson(route('api.v1.config'))
         ->assertOk()
         ->assertJsonStructure([
-            'data' => [
-                'store' => ['name', 'country_code'],
-                'locales' => ['default', 'available'],
-                'currencies' => ['base', 'available'],
-                'checkout' => ['guest_checkout_enabled', 'prices_include_tax'],
-                'policies',
-            ],
+            'store' => ['name', 'country_code'],
+            'locales' => ['default', 'available'],
+            'currencies' => ['base', 'available'],
+            'checkout' => ['guest_checkout_enabled', 'prices_include_tax'],
+            'policies',
         ]);
 });
 
@@ -40,7 +38,7 @@ test('a guest can track an order with the order number and email', function (): 
         'email' => 'BUYER@example.com',
     ])
         ->assertOk()
-        ->assertJsonPath('data.id', $order->id);
+        ->assertJsonPath('id', $order->id);
 });
 
 test('tracking fails when the email does not match the order', function (): void {

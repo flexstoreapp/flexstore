@@ -81,11 +81,11 @@ test('shipping options are listed for a destination', function (): void {
         'shipping_address' => ['country_code' => 'US', 'state' => 'NY', 'postal_code' => '10001'],
     ], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonStructure(['data' => ['shipping', 'tax_estimate']])
-        ->assertJsonPath('data.shipping.0.rate_id', $rate->id)
-        ->assertJsonPath('data.shipping.0.name', 'Standard')
-        ->assertJsonPath('data.shipping.0.carrier_name', 'In-house')
-        ->assertJsonPath('data.shipping.0.rate', '10.0000');
+        ->assertJsonStructure(['shipping', 'tax_estimate'])
+        ->assertJsonPath('shipping.0.rate_id', $rate->id)
+        ->assertJsonPath('shipping.0.name', 'Standard')
+        ->assertJsonPath('shipping.0.carrier_name', 'In-house')
+        ->assertJsonPath('shipping.0.rate', '10.0000');
 });
 
 test('payment options are listed for a destination', function (): void {
@@ -96,9 +96,9 @@ test('payment options are listed for a destination', function (): void {
         'address' => ['country_code' => 'US'],
     ], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.0.id', $gateway->id)
-        ->assertJsonPath('data.0.name', 'Cash on delivery')
-        ->assertJsonPath('data.0.driver', 'cod');
+        ->assertJsonPath('0.id', $gateway->id)
+        ->assertJsonPath('0.name', 'Cash on delivery')
+        ->assertJsonPath('0.driver', 'cod');
 });
 
 test('a coupon can be applied and removed', function (): void {
@@ -117,11 +117,11 @@ test('a coupon can be applied and removed', function (): void {
 
     postJson(route('api.v1.checkout.coupons.store'), ['coupon_code' => 'SAVE10'], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.coupon_code', 'SAVE10');
+        ->assertJsonPath('coupon_code', 'SAVE10');
 
     deleteJson(route('api.v1.checkout.coupons.destroy'), [], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.coupon_code', null);
+        ->assertJsonPath('coupon_code', null);
 });
 
 test('a cash on delivery checkout creates a session and an order', function (): void {
@@ -138,9 +138,9 @@ test('a cash on delivery checkout creates a session and an order', function (): 
     );
 
     $response->assertCreated()
-        ->assertJsonStructure(['data' => ['checkout_session_id', 'payment_status', 'redirect_url', 'cancel_url']]);
+        ->assertJsonStructure(['checkout_session_id', 'payment_status', 'redirect_url', 'cancel_url']);
 
-    $session = CheckoutSession::query()->findOrFail($response->json('data.checkout_session_id'));
+    $session = CheckoutSession::query()->findOrFail($response->json('checkout_session_id'));
     $sessionId = $session->id;
 
     expect($session->cart_id)->toBe($cart->id)
@@ -148,8 +148,8 @@ test('a cash on delivery checkout creates a session and an order', function (): 
 
     getJson(route('api.v1.checkout.sessions.show', $sessionId), ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.status', CheckoutSessionStatus::Completed->value)
-        ->assertJsonPath('data.checkout_session_id', $sessionId);
+        ->assertJsonPath('status', CheckoutSessionStatus::Completed->value)
+        ->assertJsonPath('checkout_session_id', $sessionId);
 });
 
 test('checkout fails validation without a shipping address', function (): void {
@@ -174,7 +174,7 @@ test('a checkout session cannot be read by another visitor', function (): void {
         route('api.v1.checkout.store'),
         apiCheckoutPayload($rate, $gateway),
         ['X-Cart-Token' => $cart->id],
-    )->json('data.checkout_session_id');
+    )->json('checkout_session_id');
 
     getJson(route('api.v1.checkout.sessions.show', $sessionId), [
         'X-Cart-Token' => Cart::factory()->create()->id,
