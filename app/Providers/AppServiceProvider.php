@@ -15,6 +15,7 @@ use App\Utilities\Translations;
 use App\View\Composers\EmailLayoutComposer;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -47,6 +48,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configurePassword();
         $this->configureCommands();
         $this->configureModels();
+        $this->configureApiResources();
         $this->configureDates();
         $this->configureUrls();
         $this->configureVite();
@@ -115,6 +117,11 @@ final class AppServiceProvider extends ServiceProvider
         Model::unguard();
         Model::shouldBeStrict();
         Model::automaticallyEagerLoadRelationships();
+    }
+
+    private function configureApiResources(): void
+    {
+        JsonResource::withoutWrapping();
     }
 
     private function configureUrls(): void

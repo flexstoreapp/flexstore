@@ -37,18 +37,16 @@ final readonly class CheckoutController
         $session = $result->checkoutSession;
 
         return response()->json([
-            'data' => [
-                'checkout_session_id' => $session->id,
-                'payment_status' => $payment->status->value,
-                'redirect_url' => $payment->redirectUrl,
-                'gateway_reference' => $payment->gatewayReference,
-                'payload' => $payment->payload,
-                'cancel_url' => URL::temporarySignedRoute(
-                    'checkout.cancel.store',
-                    now()->addDay(),
-                    ['session' => $session->id],
-                ),
-            ],
+            'checkout_session_id' => $session->id,
+            'payment_status' => $payment->status->value,
+            'redirect_url' => $payment->redirectUrl,
+            'gateway_reference' => $payment->gatewayReference,
+            'payload' => $payment->payload,
+            'cancel_url' => URL::temporarySignedRoute(
+                'checkout.cancel.store',
+                now()->addDay(),
+                ['session' => $session->id],
+            ),
         ], Response::HTTP_CREATED);
     }
 }

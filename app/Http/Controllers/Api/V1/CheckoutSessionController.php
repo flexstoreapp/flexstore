@@ -34,14 +34,12 @@ final readonly class CheckoutSessionController
         $user = $request->user();
 
         return response()->json([
-            'data' => [
-                'checkout_session_id' => $session->id,
-                'status' => $session->status->value,
-                'order' => $order instanceof Order && $user !== null && $order->customer_id === $user->id
-                    ? new OrderResource($customerOrderQuery->execute($order->id, $user))
-                    : null,
-                'order_id' => $order?->id,
-            ],
+            'checkout_session_id' => $session->id,
+            'status' => $session->status->value,
+            'order' => $order instanceof Order && $user !== null && $order->customer_id === $user->id
+                ? new OrderResource($customerOrderQuery->execute($order->id, $user))
+                : null,
+            'order_id' => $order?->id,
         ]);
     }
 

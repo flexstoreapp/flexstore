@@ -11,6 +11,6 @@ final readonly class StoreConfigController
 {
     public function __invoke(ApiStoreConfigQuery $query): JsonResponse
     {
-        return response()->json(['data' => $query->execute()]);
+        return response()->json($query->execute());
     }
 }

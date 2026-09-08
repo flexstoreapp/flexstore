@@ -26,7 +26,7 @@ final class ShippingOptionResource extends JsonResource
         $type = $option['type'];
 
         return [
-            'id' => $option['id'],
+            'id' => (string) $option['id'],
             'rate_id' => $option['rate_id'] ?? $option['id'],
             'quote_reference' => $option['quote_reference'] ?? null,
             'service_code' => $option['service_code'] ?? null,

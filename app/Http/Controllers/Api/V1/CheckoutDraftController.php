@@ -33,10 +33,8 @@ final readonly class CheckoutDraftController
         );
 
         return response()->json([
-            'data' => [
-                'cart_token' => $cart->id,
-                'coupon_removed' => $revalidateCartCoupon->handle($cart, $customerEmail),
-            ],
+            'cart_token' => $cart->id,
+            'coupon_removed' => $revalidateCartCoupon->handle($cart, $customerEmail),
         ]);
     }
 }

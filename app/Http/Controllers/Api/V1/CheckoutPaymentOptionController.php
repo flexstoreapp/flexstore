@@ -41,12 +41,10 @@ final readonly class CheckoutPaymentOptionController
             ? AddressLocation::fromArray($addressArr)
             : null;
 
-        return response()->json([
-            'data' => PaymentOptionResource::collection($paymentOptionsQuery->execute(
-                $orderItemsSummary,
-                $address,
-                $request->attributes->get('active_currency'),
-            )),
-        ]);
+        return response()->json(PaymentOptionResource::collection($paymentOptionsQuery->execute(
+            $orderItemsSummary,
+            $address,
+            $request->attributes->get('active_currency'),
+        )));
     }
 }

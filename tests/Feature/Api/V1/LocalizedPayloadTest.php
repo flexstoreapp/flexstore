@@ -18,5 +18,5 @@ test('order tracking returns the product title as a string', function (): void {
         'email' => 'buyer@example.com',
     ])->assertOk();
 
-    expect($response->json('data.groups.0.items.0.product_title'))->toBe('Merino crew knit');
+    expect($response->json('groups.0.items.0.product_title'))->toBe('Merino crew knit');
 });

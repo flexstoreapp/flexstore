@@ -19,6 +19,6 @@ final readonly class AddressFieldRulesController
             static fn (): array => AddressFieldRules::for($code),
         );
 
-        return response()->json(['data' => $format]);
+        return response()->json($format);
     }
 }

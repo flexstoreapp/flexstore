@@ -30,16 +30,16 @@ test('the cart token returned on first use identifies the same cart next time', 
     ]);
 
     $response->assertOk()
-        ->assertJsonPath('data.item_count', 2)
-        ->assertJsonPath('data.items.0.product_id', $product->id)
-        ->assertJsonStructure(['data' => ['token', 'items', 'subtotal', 'total', 'requires_shipping']]);
+        ->assertJsonPath('item_count', 2)
+        ->assertJsonPath('items.0.product_id', $product->id)
+        ->assertJsonStructure(['token', 'items', 'subtotal', 'total', 'requires_shipping']);
 
-    $token = $response->json('data.token');
+    $token = $response->json('token');
 
     getJson(route('api.v1.cart.show'), ['X-Cart-Token' => $token])
         ->assertOk()
-        ->assertJsonPath('data.token', $token)
-        ->assertJsonPath('data.item_count', 2);
+        ->assertJsonPath('token', $token)
+        ->assertJsonPath('item_count', 2);
 });
 
 test('the cart token header resolves an existing cart', function (): void {
@@ -49,8 +49,8 @@ test('the cart token header resolves an existing cart', function (): void {
 
     getJson(route('api.v1.cart.show'), ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.token', $cart->id)
-        ->assertJsonPath('data.item_count', 3);
+        ->assertJsonPath('token', $cart->id)
+        ->assertJsonPath('item_count', 3);
 });
 
 test('a cart item quantity can be updated', function (): void {
@@ -60,7 +60,7 @@ test('a cart item quantity can be updated', function (): void {
 
     patchJson(route('api.v1.cart.items.update', $item->id), ['quantity' => 4], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.item_count', 4);
+        ->assertJsonPath('item_count', 4);
 });
 
 test('a cart item can be removed', function (): void {
@@ -70,7 +70,7 @@ test('a cart item can be removed', function (): void {
 
     deleteJson(route('api.v1.cart.items.destroy', $item->id), [], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonCount(0, 'data.items');
+        ->assertJsonCount(0, 'items');
 });
 
 test('an item belonging to another cart cannot be modified', function (): void {
@@ -90,7 +90,7 @@ test('the cart can be cleared', function (): void {
 
     deleteJson(route('api.v1.cart.destroy'), [], ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonCount(0, 'data.items');
+        ->assertJsonCount(0, 'items');
 });
 
 test('adding more than the available stock fails validation', function (): void {
@@ -125,7 +125,7 @@ test('a variant line carries its options and the variant image', function (): vo
 
     getJson(route('api.v1.cart.show'), ['X-Cart-Token' => $cart->id])
         ->assertOk()
-        ->assertJsonPath('data.items.0.variant_options', ['Size' => 'Medium'])
-        ->assertJsonPath('data.items.0.product_variant_id', $variant->id)
-        ->assertJsonPath('data.items.0.featured_media.id', $variant->media_id);
+        ->assertJsonPath('items.0.variant_options', ['Size' => 'Medium'])
+        ->assertJsonPath('items.0.product_variant_id', $variant->id)
+        ->assertJsonPath('items.0.featured_media.id', $variant->media_id);
 });

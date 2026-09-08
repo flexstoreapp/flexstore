@@ -34,7 +34,8 @@ final class OrderLineResource extends JsonResource
             'quantity' => $line['quantity'] ?? null,
             'unit_price' => $line['unit_price'] ?? null,
             'total_price' => $line['total_price'] ?? null,
-            'featured_media' => $media instanceof Media ? new MediaResource($media) : $media,
+            'featured_media' => $media instanceof Media ? new MediaResource($media) : null,
+            'thumbnail_url' => is_string($media) ? $media : null,
         ];
     }
 }
