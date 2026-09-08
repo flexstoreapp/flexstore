@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\Permission;
 use App\Enums\TokenAbility;
 use App\Http\Controllers\Api\V1\Admin;
+use App\Http\Middleware\Api\EnsureCustomerIsNotStaff;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Route;
 
@@ -59,5 +60,19 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::get('inventory', [Admin\InventoryController::class, 'index'])->middleware(Authorize::using(Permission::InventoryView))->name('inventory.index');
         Route::get('inventory/{product}', [Admin\InventoryController::class, 'show'])->middleware(Authorize::using(Permission::InventoryView))->name('inventory.show');
         Route::post('inventory/stock-adjustments', [Admin\StockAdjustmentController::class, 'store'])->middleware(Authorize::using(Permission::InventoryManage))->name('inventory.stock-adjustments.store');
+
+        // customers
+        Route::get('customers', [Admin\CustomerController::class, 'index'])->middleware(Authorize::using(Permission::CustomersView))->name('customers.index');
+        Route::get('customers/{customer}', [Admin\CustomerController::class, 'show'])->middleware(Authorize::using(Permission::CustomersView))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.show');
+        Route::get('customers/{customer}/addresses', [Admin\CustomerAddressController::class, 'index'])->middleware(Authorize::using(Permission::CustomersView))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.addresses.index');
+        Route::post('customers', [Admin\CustomerController::class, 'store'])->middleware(Authorize::using(Permission::CustomersManage))->name('customers.store');
+        Route::patch('customers/{customer}', [Admin\CustomerController::class, 'update'])->middleware(Authorize::using(Permission::CustomersManage))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.update');
+        Route::post('customers/{customer}/addresses', [Admin\CustomerAddressController::class, 'store'])->middleware(Authorize::using(Permission::CustomersManage))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.addresses.store');
+        Route::patch('customers/{customer}/addresses/{address}', [Admin\CustomerAddressController::class, 'update'])->middleware(Authorize::using(Permission::CustomersManage))->scopeBindings()->middleware(EnsureCustomerIsNotStaff::class)->name('customers.addresses.update');
+        Route::delete('customers/{customer}/addresses/{address}', [Admin\CustomerAddressController::class, 'destroy'])->middleware(Authorize::using(Permission::CustomersManage))->scopeBindings()->middleware(EnsureCustomerIsNotStaff::class)->name('customers.addresses.destroy');
+        Route::post('customers/{customer}/addresses/{address}/default', Admin\SetDefaultCustomerAddressController::class)->middleware(Authorize::using(Permission::CustomersManage))->scopeBindings()->middleware(EnsureCustomerIsNotStaff::class)->name('customers.addresses.default');
+        Route::delete('customers/bulk', [Admin\BulkCustomerController::class, 'destroy'])->middleware(Authorize::using(Permission::CustomersDelete))->name('customers.bulk.destroy');
+        Route::delete('customers/{customer}', [Admin\CustomerController::class, 'destroy'])->middleware(Authorize::using(Permission::CustomersDelete))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.destroy');
+        Route::get('users/search', Admin\UserSearchController::class)->middleware(Authorize::using(Permission::UsersReference))->name('users.search');
     });
 });
