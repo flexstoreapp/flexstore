@@ -93,5 +93,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::get('reviews/{review}', [Admin\ReviewController::class, 'show'])->middleware(Authorize::using(Permission::ReviewsView))->name('reviews.show');
         Route::patch('reviews/{review}', [Admin\ReviewController::class, 'update'])->middleware(Authorize::using(Permission::ReviewsManage))->name('reviews.update');
         Route::delete('reviews/{review}', [Admin\ReviewController::class, 'destroy'])->middleware(Authorize::using(Permission::ReviewsDelete))->name('reviews.destroy');
+
+        // dashboard
+        Route::get('dashboard', Admin\DashboardController::class)->middleware(Authorize::using(Permission::DashboardView))->name('dashboard');
     });
 });
