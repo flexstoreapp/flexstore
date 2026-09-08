@@ -18,5 +18,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
     Route::middleware(['auth:sanctum', 'ability:' . TokenAbility::Admin->value])->group(function (): void {
         Route::post('auth/logout', [Admin\AdminAccessTokenController::class, 'destroy'])->name('auth.logout');
         Route::get('auth/me', Admin\AdminProfileController::class)->name('auth.me');
+
+        Route::get('config', Admin\StoreConfigController::class)->name('config');
     });
 });
