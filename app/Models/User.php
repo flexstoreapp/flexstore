@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\AdminThemeColor;
 use App\Enums\Appearance;
 use App\Enums\FulfillmentStatus;
+use App\Enums\Role as RoleEnum;
 use App\Notifications\CustomerVerifyEmailNotification;
 use App\Notifications\ResetPasswordNotification;
 use Carbon\CarbonInterface;
@@ -100,6 +101,11 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new CustomerVerifyEmailNotification);
+    }
+
+    public function hasAdminAccess(): bool
+    {
+        return $this->roles->contains(fn (Role $role): bool => $role->name !== RoleEnum::Customer->value);
     }
 
     public function hasTwoFactorSecret(): bool
