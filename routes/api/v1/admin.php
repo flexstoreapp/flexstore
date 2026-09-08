@@ -114,5 +114,9 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('orders/{order}/shipments', [Admin\OrderShipmentController::class, 'store'])->middleware(Authorize::using(Permission::OrdersFulfill))->name('orders.shipments.store');
         Route::patch('orders/{order}/shipments/{shipment}', [Admin\OrderShipmentController::class, 'update'])->middleware(Authorize::using(Permission::OrdersFulfill))->scopeBindings()->name('orders.shipments.update');
         Route::delete('orders/{order}/shipments/{shipment}', [Admin\OrderShipmentController::class, 'destroy'])->middleware(Authorize::using(Permission::OrdersFulfill))->scopeBindings()->name('orders.shipments.destroy');
+
+        // payments
+        Route::post('orders/{order}/void-payment', Admin\VoidPaymentController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.void-payment');
+        Route::post('orders/{order}/record-payment', [Admin\OrderPaymentRecordController::class, 'store'])->middleware(Authorize::using(Permission::OrdersManage))->name('orders.record-payment.store');
     });
 });
