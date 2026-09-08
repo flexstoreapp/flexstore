@@ -74,5 +74,14 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::delete('customers/bulk', [Admin\BulkCustomerController::class, 'destroy'])->middleware(Authorize::using(Permission::CustomersDelete))->name('customers.bulk.destroy');
         Route::delete('customers/{customer}', [Admin\CustomerController::class, 'destroy'])->middleware(Authorize::using(Permission::CustomersDelete))->middleware(EnsureCustomerIsNotStaff::class)->name('customers.destroy');
         Route::get('users/search', Admin\UserSearchController::class)->middleware(Authorize::using(Permission::UsersReference))->name('users.search');
+
+        // coupons
+        Route::post('coupons/validate', Admin\CouponValidationController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('coupons.validate');
+        Route::delete('coupons/bulk', [Admin\BulkCouponController::class, 'destroy'])->middleware(Authorize::using(Permission::CouponsDelete))->name('coupons.bulk.destroy');
+        Route::get('coupons', [Admin\CouponController::class, 'index'])->middleware(Authorize::using(Permission::CouponsView))->name('coupons.index');
+        Route::post('coupons', [Admin\CouponController::class, 'store'])->middleware(Authorize::using(Permission::CouponsManage))->name('coupons.store');
+        Route::get('coupons/{coupon}', [Admin\CouponController::class, 'show'])->middleware(Authorize::using(Permission::CouponsView))->name('coupons.show');
+        Route::patch('coupons/{coupon}', [Admin\CouponController::class, 'update'])->middleware(Authorize::using(Permission::CouponsManage))->name('coupons.update');
+        Route::delete('coupons/{coupon}', [Admin\CouponController::class, 'destroy'])->middleware(Authorize::using(Permission::CouponsDelete))->name('coupons.destroy');
     });
 });
