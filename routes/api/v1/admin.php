@@ -54,5 +54,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::delete('products/{product}', [Admin\ProductController::class, 'destroy'])->middleware(Authorize::using(Permission::ProductsDelete))->name('products.destroy');
         Route::post('products/{product}/duplicate', [Admin\DuplicateProductController::class, 'store'])->middleware(Authorize::using(Permission::ProductsManage))->name('products.duplicate');
         Route::post('product-downloads', [Admin\DigitalFileController::class, 'store'])->middleware(Authorize::using(Permission::ProductsManage))->name('product-downloads.store');
+
+        // inventory
+        Route::get('inventory', [Admin\InventoryController::class, 'index'])->middleware(Authorize::using(Permission::InventoryView))->name('inventory.index');
+        Route::get('inventory/{product}', [Admin\InventoryController::class, 'show'])->middleware(Authorize::using(Permission::InventoryView))->name('inventory.show');
+        Route::post('inventory/stock-adjustments', [Admin\StockAdjustmentController::class, 'store'])->middleware(Authorize::using(Permission::InventoryManage))->name('inventory.stock-adjustments.store');
     });
 });
