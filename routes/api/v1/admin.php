@@ -25,5 +25,14 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
         // media
         Route::post('media', [Admin\MediaController::class, 'store'])->middleware(Authorize::using(Permission::MediaUpload))->name('media.store');
+
+        // categories
+        Route::get('categories/search', Admin\CategorySearchController::class)->middleware(Authorize::using(Permission::CategoriesReference))->name('categories.search');
+        Route::get('categories', [Admin\CategoryController::class, 'index'])->middleware(Authorize::using(Permission::CategoriesView))->name('categories.index');
+        Route::post('categories', [Admin\CategoryController::class, 'store'])->middleware(Authorize::using(Permission::CategoriesManage))->name('categories.store');
+        Route::get('categories/{category}', [Admin\CategoryController::class, 'show'])->middleware(Authorize::using(Permission::CategoriesView))->name('categories.show');
+        Route::patch('categories/{category}/reorder', [Admin\CategoryReorderController::class, 'update'])->middleware(Authorize::using(Permission::CategoriesManage))->name('categories.reorder');
+        Route::patch('categories/{category}', [Admin\CategoryController::class, 'update'])->middleware(Authorize::using(Permission::CategoriesManage))->name('categories.update');
+        Route::delete('categories/{category}', [Admin\CategoryController::class, 'destroy'])->middleware(Authorize::using(Permission::CategoriesDelete))->name('categories.destroy');
     });
 });
