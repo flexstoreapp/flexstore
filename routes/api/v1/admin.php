@@ -118,5 +118,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         // payments
         Route::post('orders/{order}/void-payment', Admin\VoidPaymentController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.void-payment');
         Route::post('orders/{order}/record-payment', [Admin\OrderPaymentRecordController::class, 'store'])->middleware(Authorize::using(Permission::OrdersManage))->name('orders.record-payment.store');
+
+        // refunds
+        Route::get('orders/{order}/refund', [Admin\OrderRefundController::class, 'show'])->middleware(Authorize::using(Permission::OrdersRefund))->name('orders.refund.show');
+        Route::post('orders/{order}/refund', [Admin\OrderRefundController::class, 'store'])->middleware(Authorize::using(Permission::OrdersRefund))->name('orders.refund.store');
+        Route::post('orders/{order}/refund-credit', [Admin\OrderRefundCreditController::class, 'store'])->middleware(Authorize::using(Permission::OrdersManage))->name('orders.refund-credit.store');
     });
 });
