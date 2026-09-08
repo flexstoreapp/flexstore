@@ -96,5 +96,18 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
         // dashboard
         Route::get('dashboard', Admin\DashboardController::class)->middleware(Authorize::using(Permission::DashboardView))->name('dashboard');
+
+        // orders
+        Route::get('orders', [Admin\AdminOrderController::class, 'index'])->middleware(Authorize::using(Permission::OrdersView))->name('orders.index');
+        Route::get('orders/{order}', [Admin\AdminOrderController::class, 'show'])->middleware(Authorize::using(Permission::OrdersView))->name('orders.show');
+        Route::get('orders/{order}/activities', [Admin\AdminOrderActivityController::class, 'index'])->middleware(Authorize::using(Permission::OrdersView))->name('orders.activities.index');
+        Route::post('orders/{order}/activities', [Admin\AdminOrderActivityController::class, 'store'])->middleware(Authorize::using(Permission::OrdersManage))->name('orders.activities.store');
+        Route::patch('orders/{order}/activities/{activity}', [Admin\AdminOrderActivityController::class, 'update'])->middleware(Authorize::using(Permission::OrdersManage))->scopeBindings()->name('orders.activities.update');
+        Route::delete('orders/{order}/activities/{activity}', [Admin\AdminOrderActivityController::class, 'destroy'])->middleware(Authorize::using(Permission::OrdersManage))->scopeBindings()->name('orders.activities.destroy');
+        Route::post('orders/{order}/hold', Admin\AdminHoldOrderController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.hold');
+        Route::post('orders/{order}/release-hold', Admin\AdminReleaseOrderHoldController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.release-hold');
+        Route::post('orders/{order}/in-progress', Admin\AdminInProgressOrderController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.in-progress');
+        Route::post('orders/{order}/resend-notification', Admin\AdminResendOrderNotificationController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.resend-notification');
+        Route::post('orders/{order}/cancel', Admin\AdminCancelOrderController::class)->middleware(Authorize::using(Permission::OrdersCancel))->name('orders.cancel');
     });
 });
