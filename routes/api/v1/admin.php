@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Enums\Permission;
 use App\Enums\TokenAbility;
 use App\Http\Controllers\Api\V1\Admin;
+use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function (): void {
@@ -20,5 +22,8 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::get('auth/me', Admin\AdminProfileController::class)->name('auth.me');
 
         Route::get('config', Admin\StoreConfigController::class)->name('config');
+
+        // media
+        Route::post('media', [Admin\MediaController::class, 'store'])->middleware(Authorize::using(Permission::MediaUpload))->name('media.store');
     });
 });
