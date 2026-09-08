@@ -34,5 +34,14 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::patch('categories/{category}/reorder', [Admin\CategoryReorderController::class, 'update'])->middleware(Authorize::using(Permission::CategoriesManage))->name('categories.reorder');
         Route::patch('categories/{category}', [Admin\CategoryController::class, 'update'])->middleware(Authorize::using(Permission::CategoriesManage))->name('categories.update');
         Route::delete('categories/{category}', [Admin\CategoryController::class, 'destroy'])->middleware(Authorize::using(Permission::CategoriesDelete))->name('categories.destroy');
+
+        // brands
+        Route::get('brands/search', Admin\BrandSearchController::class)->middleware(Authorize::using(Permission::BrandsReference))->name('brands.search');
+        Route::get('brands', [Admin\BrandController::class, 'index'])->middleware(Authorize::using(Permission::BrandsView))->name('brands.index');
+        Route::post('brands', [Admin\BrandController::class, 'store'])->middleware(Authorize::using(Permission::BrandsManage))->name('brands.store');
+        Route::delete('brands/bulk', [Admin\BulkBrandController::class, 'destroy'])->middleware(Authorize::using(Permission::BrandsDelete))->name('brands.bulk.destroy');
+        Route::get('brands/{brand}', [Admin\BrandController::class, 'show'])->middleware(Authorize::using(Permission::BrandsView))->name('brands.show');
+        Route::patch('brands/{brand}', [Admin\BrandController::class, 'update'])->middleware(Authorize::using(Permission::BrandsManage))->name('brands.update');
+        Route::delete('brands/{brand}', [Admin\BrandController::class, 'destroy'])->middleware(Authorize::using(Permission::BrandsDelete))->name('brands.destroy');
     });
 });

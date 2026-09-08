@@ -26,7 +26,6 @@ final class UpdateBrandRequest extends FormRequest
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'url_handle' => [
                 'sometimes',
-                'nullable',
                 'string',
                 'max:255',
                 new SlugRule(),
