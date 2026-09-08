@@ -109,5 +109,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('orders/{order}/in-progress', Admin\AdminInProgressOrderController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.in-progress');
         Route::post('orders/{order}/resend-notification', Admin\AdminResendOrderNotificationController::class)->middleware(Authorize::using(Permission::OrdersManage))->name('orders.resend-notification');
         Route::post('orders/{order}/cancel', Admin\AdminCancelOrderController::class)->middleware(Authorize::using(Permission::OrdersCancel))->name('orders.cancel');
+
+        // shipments
+        Route::post('orders/{order}/shipments', [Admin\OrderShipmentController::class, 'store'])->middleware(Authorize::using(Permission::OrdersFulfill))->name('orders.shipments.store');
+        Route::patch('orders/{order}/shipments/{shipment}', [Admin\OrderShipmentController::class, 'update'])->middleware(Authorize::using(Permission::OrdersFulfill))->scopeBindings()->name('orders.shipments.update');
+        Route::delete('orders/{order}/shipments/{shipment}', [Admin\OrderShipmentController::class, 'destroy'])->middleware(Authorize::using(Permission::OrdersFulfill))->scopeBindings()->name('orders.shipments.destroy');
     });
 });
