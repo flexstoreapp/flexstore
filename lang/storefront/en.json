@@ -10,7 +10,6 @@
     "Create account": "Create account",
     "Create an account": "Create an account",
     "Create your account": "Create your account",
-    "Device name": "Device name",
     "Don’t have an account?": "Don’t have an account?",
     "Enter your email and we will send you a link to reset your password.": "Enter your email and we will send you a link to reset your password.",
     "Enter your password": "Enter your password",
@@ -20,7 +19,6 @@
     "Jane Doe": "Jane Doe",
     "Keep me signed in": "Keep me signed in",
     "Log in to your account to continue.": "Log in to your account to continue.",
-    "Logged out.": "Logged out.",
     "Re-enter your password": "Re-enter your password",
     "Remembered your password?": "Remembered your password?",
     "Resend verification email": "Resend verification email",
@@ -34,7 +32,6 @@
     "Your email address is verified.": "Your email address is verified.",
 
     "Account details": "Account details",
-    "Address deleted.": "Address deleted.",
     "Default address": "Default address",
     "No default address saved yet.": "No default address saved yet.",
     "No orders yet": "No orders yet",
